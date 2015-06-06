@@ -1,10 +1,18 @@
 package com.example.weijingliu.mtabusclient;
 
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -15,7 +23,11 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-public class NearbyActivity extends ActionBarActivity {
+public class NearbyActivity extends AppCompatActivity {
+
+  private DrawerLayout mDrawerLayout;
+  private ActionBarDrawerToggle mActionBarDrawerToggle;
+  private Toolbar mToolbar;
 
   private RequestQueue mRequestQueue;
 
@@ -25,7 +37,27 @@ public class NearbyActivity extends ActionBarActivity {
     setContentView(R.layout.activity_nearby);
 
     mRequestQueue = Volley.newRequestQueue(this);
+    init();
     testApi();
+  }
+
+  private void init() {
+    // instantiate
+    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    mActionBarDrawerToggle = new ActionBarDrawerToggle(
+        this,
+        mDrawerLayout,
+        R.drawable.ic_drawer,
+        R.drawable.ic_drawer);
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+    // config
+    setSupportActionBar(mToolbar);
+    mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setHomeButtonEnabled(true);
+    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
   }
 
   private void testApi() {
@@ -65,6 +97,12 @@ public class NearbyActivity extends ActionBarActivity {
 
     //noinspection SimplifiableIfStatement
     if (id == R.id.action_settings) {
+      return true;
+    }
+
+    if (id == android.R.id.home) {
+      Log.i("jing", "Toolbar's home clicked");
+      mDrawerLayout.openDrawer(Gravity.START);
       return true;
     }
 

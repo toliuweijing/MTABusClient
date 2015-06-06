@@ -1,4 +1,4 @@
-package com.example.weijingliu.mtabusclient;
+package com.example.weijingliu.mtabusclient.network;
 
 import android.net.Uri;
 

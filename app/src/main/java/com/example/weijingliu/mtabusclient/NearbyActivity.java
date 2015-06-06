@@ -1,8 +1,7 @@
 package com.example.weijingliu.mtabusclient;
 
-import android.support.v4.app.FragmentActivity;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,22 +10,23 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.weijingliu.mtabusclient.network.RestApis;
 
 import org.json.JSONObject;
 
 public class NearbyActivity extends AppCompatActivity {
+  private static final String TAG = NearbyActivity.class.getSimpleName();
 
   private DrawerLayout mDrawerLayout;
   private ActionBarDrawerToggle mActionBarDrawerToggle;
+  private NavigationView mNavigationView;
   private Toolbar mToolbar;
 
   private RequestQueue mRequestQueue;
@@ -36,13 +36,13 @@ public class NearbyActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_nearby);
 
-    mRequestQueue = Volley.newRequestQueue(this);
     init();
     testApi();
   }
 
   private void init() {
     // instantiate
+    mRequestQueue = Volley.newRequestQueue(this);
     mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     mActionBarDrawerToggle = new ActionBarDrawerToggle(
         this,
@@ -50,14 +50,24 @@ public class NearbyActivity extends AppCompatActivity {
         R.drawable.ic_drawer,
         R.drawable.ic_drawer);
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
+    mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
 
     // config
     setSupportActionBar(mToolbar);
+    mNavigationView.setNavigationItemSelectedListener(
+        new NavigationView.OnNavigationItemSelectedListener() {
+          @Override
+          public boolean onNavigationItemSelected(MenuItem menuItem) {
+            Log.d("TAG", menuItem.getTitle() + " selected");
+            menuItem.setChecked(true);
+            return true;
+          }
+        });
     mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
-    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
   }
 
   private void testApi() {
@@ -69,13 +79,13 @@ public class NearbyActivity extends AppCompatActivity {
         new Response.Listener<JSONObject>() {
           @Override
           public void onResponse(JSONObject jsonObject) {
-            Log.i("jing", jsonObject.toString());
+            Log.d("TAG", jsonObject.toString());
           }
         },
         new Response.ErrorListener() {
           @Override
           public void onErrorResponse(VolleyError volleyError) {
-            Log.e("jing", volleyError.toString());
+            Log.e("TAG", volleyError.toString());
           }
         });
     mRequestQueue.add(request);
@@ -101,7 +111,7 @@ public class NearbyActivity extends AppCompatActivity {
     }
 
     if (id == android.R.id.home) {
-      Log.i("jing", "Toolbar's home clicked");
+      Log.d(TAG, "Toolbar's home clicked");
       mDrawerLayout.openDrawer(Gravity.START);
       return true;
     }

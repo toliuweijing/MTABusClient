@@ -1,0 +1,5 @@
+<resources>
+    <style name="AppBar.DropShadow" parent="AppBar">
+        <item name="android:elevation">4dp</item>
+    </style>
+</resources>

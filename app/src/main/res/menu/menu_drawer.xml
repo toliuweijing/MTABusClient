@@ -6,10 +6,10 @@
             android:id="@+id/navigation_item_1"
             android:checked="true"
             android:icon="@drawable/ic_directions_bus_black_48dp"
-            android:title="bus"/>
+            android:title="Bus"/>
         <item
             android:id="@+id/navigation_item_2"
             android:icon="@drawable/ic_alarm_black_48dp"
-            android:title="alarm"/>
+            android:title="Alarm"/>
     </group>
 </menu>

@@ -1,4 +1,4 @@
-package com.example.weijingliu.mtabusclient;
+package com.example.weijingliu.mtabusclient.network;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;

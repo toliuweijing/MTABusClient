@@ -5,12 +5,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -28,6 +29,9 @@ public class NearbyActivity extends AppCompatActivity {
   private ActionBarDrawerToggle mActionBarDrawerToggle;
   private NavigationView mNavigationView;
   private Toolbar mToolbar;
+  private RecyclerView mRecyclerView;
+  private LinearLayoutManager mLinearLayoutManager;
+  private NearbyBusAdapter mNearbyBusAdapter;
 
   private RequestQueue mRequestQueue;
 
@@ -51,6 +55,9 @@ public class NearbyActivity extends AppCompatActivity {
         R.drawable.ic_drawer);
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+    mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+    mLinearLayoutManager = new LinearLayoutManager(this);
+    mNearbyBusAdapter = new NearbyBusAdapter();
 
     // config
     setSupportActionBar(mToolbar);
@@ -64,6 +71,11 @@ public class NearbyActivity extends AppCompatActivity {
           }
         });
     mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+
+    mRecyclerView.setHasFixedSize(true);
+    mRecyclerView.setLayoutManager(mLinearLayoutManager);
+    mRecyclerView.setAdapter(mNearbyBusAdapter);
+    mRecyclerView.addItemDecoration(new NearbyBusAdapter.SimpleDividerItemDecoration());
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);

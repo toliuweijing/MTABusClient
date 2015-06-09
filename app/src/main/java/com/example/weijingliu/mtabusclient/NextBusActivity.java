@@ -43,7 +43,7 @@ public class NextBusActivity extends AppCompatActivity {
 
     mCollapsingToolbarLayout = (CollapsingToolbarLayout)
         findViewById(R.id.collapsing_toolbar_layout);
-    mCollapsingToolbarLayout.setTitle("Kings Plaza");
+//    mCollapsingToolbarLayout.setTitle("Kings Plaza");
 
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

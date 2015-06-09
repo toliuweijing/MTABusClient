@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import static com.example.weijingliu.mtabusclient.Utils.px;
@@ -19,9 +18,8 @@ public class LolipopView extends View {
 
   private Paint mPaint = new Paint();
 
-  public static final int APPEARANCE_START = 1;
-  public static final int APPEARANCE_END = 1<<1;
-  public static final int APPEARANCE_REGULAR = APPEARANCE_START | APPEARANCE_END;
+  public static final int APPEARANCE_PADDING = 1;
+  public static final int APPEARANCE_REGULAR = 1<<1;
   private int mAppearance = APPEARANCE_REGULAR;
 
   public LolipopView(Context context) {
@@ -38,6 +36,11 @@ public class LolipopView extends View {
 
   public void setAppearance(int appearance) {
     mAppearance = appearance;
+    requestLayout();
+  }
+
+  public void setCircleColor(int circleColor) {
+    mCircleColor = circleColor;
   }
 
   @Override
@@ -60,32 +63,40 @@ public class LolipopView extends View {
     // Draw a center_vertical line.
     mPaint.setColor(mLineColor);
     mPaint.setStrokeWidth(px(2));
-    if ((APPEARANCE_START & mAppearance) > 0) {
+
+    if ((APPEARANCE_REGULAR & mAppearance) > 0) {
       canvas.drawLine(
           centerX,
           circleBottom + px(CIRCLE_MARGIN_DP),
           centerX,
           bottom,
           mPaint);
-    }
-    if ((APPEARANCE_END & mAppearance) > 0) {
       canvas.drawLine(
           centerX,
           top,
           centerX,
           circleTop - px(CIRCLE_MARGIN_DP),
           mPaint);
+    } else if ((APPEARANCE_PADDING & mAppearance) > 0){
+      canvas.drawLine(
+          centerX,
+          top,
+          centerX,
+          bottom,
+          mPaint);
     }
 
-    // Draw circle.
-    mPaint.setStyle(Paint.Style.STROKE);
-    mPaint.setColor(mCircleColor);
-    mPaint.setStrokeWidth(px(STROKE_WIDTH_DP));
-    canvas.drawOval(
-        circleLeft,
-        circleTop,
-        circleRight,
-        circleBottom,
-        mPaint);
+    if ((APPEARANCE_REGULAR & mAppearance) > 0) {
+      // Draw circle.
+      mPaint.setStyle(Paint.Style.STROKE);
+      mPaint.setColor(mCircleColor);
+      mPaint.setStrokeWidth(px(STROKE_WIDTH_DP));
+      canvas.drawOval(
+          circleLeft,
+          circleTop,
+          circleRight,
+          circleBottom,
+          mPaint);
+    }
   }
 }

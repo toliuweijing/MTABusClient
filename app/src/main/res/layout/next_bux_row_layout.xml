@@ -6,10 +6,10 @@
     >
     <com.example.weijingliu.mtabusclient.LolipopView
         android:id="@+id/lolipop"
-        android:layout_width="24dp"
+        android:layout_width="20dp"
         android:layout_height="match_parent"
         android:layout_gravity="left|center_vertical"
-        android:layout_marginLeft="48dp"
+        android:layout_marginLeft="52dp"
         />
     <TextView
         android:id="@+id/middle_text"

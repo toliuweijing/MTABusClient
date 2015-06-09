@@ -1,11 +1,13 @@
 package com.example.weijingliu.mtabusclient;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import static com.example.weijingliu.mtabusclient.Utils.px;
@@ -21,28 +23,43 @@ public class NextBusAdapter extends RecyclerView.Adapter<NextBusAdapter.ViewHold
 
   @Override
   public void onBindViewHolder(ViewHolder viewHolder, int position) {
-    viewHolder.textView.setText(String.valueOf(position) + ":00");
-
-    int appearance = LolipopView.APPEARANCE_REGULAR;
-    if (position == 0) {
-      appearance = LolipopView.APPEARANCE_START;
-    } else if (position == getItemCount() -1) {
-      appearance = LolipopView.APPEARANCE_END;
+    boolean isPaddingView = position == 0 || position == getItemCount() - 1;
+    if (isPaddingView) {
+      ViewGroup.LayoutParams layoutParams = viewHolder.frameLayout.getLayoutParams();
+      layoutParams.height = px(50);
+      viewHolder.frameLayout.setLayoutParams(layoutParams);
+      viewHolder.textView.setText(null);
+      viewHolder.lolipopView.setAppearance(LolipopView.APPEARANCE_PADDING);
+    } else {
+      ViewGroup.LayoutParams layoutParams = viewHolder.frameLayout.getLayoutParams();
+      layoutParams.height = px(100);
+      viewHolder.frameLayout.setLayoutParams(layoutParams);
+      viewHolder.textView.setText(null);
+      viewHolder.textView.setText(String.valueOf(position) + ":00 AM");
+      viewHolder.lolipopView.setAppearance(LolipopView.APPEARANCE_REGULAR);
     }
-    viewHolder.lolipopView.setAppearance(appearance);
+
+    int color = (position % 2 == 0) ?
+        Color.parseColor("#D84315") :
+        Color.parseColor("#00695C");
+    viewHolder.lolipopView.setCircleColor(color);
+
+    viewHolder.frameLayout.requestLayout();
   }
 
   @Override
   public int getItemCount() {
-    return 5;
+    return 20;
   }
 
   class ViewHolder extends RecyclerView.ViewHolder {
     LolipopView lolipopView;
     TextView textView;
+    FrameLayout frameLayout;
 
     public ViewHolder(View view) {
       super(view);
+      frameLayout = (FrameLayout) view;
       lolipopView = (LolipopView) view.findViewById(R.id.lolipop);
       textView = (TextView) view.findViewById(R.id.middle_text);
     }

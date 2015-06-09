@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    >
+    <com.example.weijingliu.mtabusclient.LolipopView
+        android:id="@+id/lolipop"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="48dp"
+        />
+    <TextView
+        android:id="@+id/middle_text"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
+</FrameLayout>

@@ -1,5 +1,6 @@
 package com.example.weijingliu.mtabusclient;
 
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,7 +24,7 @@ import com.example.weijingliu.mtabusclient.network.RestApis;
 
 import org.json.JSONObject;
 
-public class NearbyActivity extends AppCompatActivity {
+public class NearbyActivity extends AppCompatActivity implements NearbyBusAdapter.Listener {
   private static final String TAG = NearbyActivity.class.getSimpleName();
 
   private DrawerLayout mDrawerLayout;
@@ -76,6 +78,7 @@ public class NearbyActivity extends AppCompatActivity {
     mRecyclerView.setLayoutManager(mLinearLayoutManager);
     mRecyclerView.setAdapter(mNearbyBusAdapter);
     mRecyclerView.addItemDecoration(new NearbyBusAdapter.SimpleDividerItemDecoration());
+    mNearbyBusAdapter.setListener(this);
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
@@ -129,5 +132,12 @@ public class NearbyActivity extends AppCompatActivity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onRouteSelected() {
+    Intent intent = new Intent();
+    intent.setClass(this, NextBusActivity.class);
+    startActivity(intent);
   }
 }

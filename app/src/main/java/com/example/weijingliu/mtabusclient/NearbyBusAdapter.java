@@ -38,14 +38,32 @@ public class NearbyBusAdapter extends RecyclerView.Adapter<NearbyBusAdapter.View
   @Override
   public int getItemCount() {
     Log.d(TAG, "getItemCount");
-    return 3;
+    return 7;
   }
 
-  static class ViewHolder extends RecyclerView.ViewHolder {
+  public void setListener(Listener listener) {
+    mListener = listener;
+  }
+
+  interface Listener {
+    void onRouteSelected();
+  }
+  private Listener mListener;
+
+  class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder(View view) {
       super(view);
-    }
-  }
+      view.setOnClickListener(
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              if (mListener != null) {
+                mListener.onRouteSelected();
+              }
+            }
+          }
+      );
+    }}
 
   public static class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;

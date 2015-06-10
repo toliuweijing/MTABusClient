@@ -13,16 +13,20 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.weijingliu.mtabusclient.network.RestApis;
+import com.example.weijingliu.mtabusclient.rest.RestApis;
+import com.example.weijingliu.mtabusclient.rest.service.SiriService;
+import com.siri.model.StopMonitoringDeliveryRoot;
 
 import org.json.JSONObject;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
 
 public class NearbyActivity extends AppCompatActivity implements NearbyBusAdapter.Listener {
   private static final String TAG = NearbyActivity.class.getSimpleName();
@@ -43,7 +47,8 @@ public class NearbyActivity extends AppCompatActivity implements NearbyBusAdapte
     setContentView(R.layout.activity_nearby);
 
     init();
-    testApi();
+//    testApi();
+    testRetrofit();
   }
 
   private void init() {
@@ -85,8 +90,30 @@ public class NearbyActivity extends AppCompatActivity implements NearbyBusAdapte
     getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
   }
 
+  private void testRetrofit() {
+    try {
+      SiriService.sInstance.getSiriApi().getSample(
+          new Callback<StopMonitoringDeliveryRoot>() {
+            @Override
+            public void success(StopMonitoringDeliveryRoot stopMonitoringDeliveryRoot, retrofit.client.Response response) {
+              Log.d(TAG, "YES");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+              Log.e(TAG, error.getMessage());
+            }
+          }
+      );
+    } catch (Throwable e) {
+      Log.e(TAG, e.getMessage());
+    }
+    Log.d(TAG, "yes");
+  }
+
   private void testApi() {
     String url = RestApis.Siri.stopMonitoring(RestApis.SAMPLE_STOP_CODE).toString();
+    Log.d(TAG, url);
 
     JsonObjectRequest request = new JsonObjectRequest(
         url,
@@ -94,7 +121,7 @@ public class NearbyActivity extends AppCompatActivity implements NearbyBusAdapte
         new Response.Listener<JSONObject>() {
           @Override
           public void onResponse(JSONObject jsonObject) {
-            Log.d("TAG", jsonObject.toString());
+            Log.d(TAG, jsonObject.toString());
           }
         },
         new Response.ErrorListener() {

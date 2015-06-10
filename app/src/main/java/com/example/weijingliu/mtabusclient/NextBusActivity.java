@@ -1,9 +1,11 @@
 package com.example.weijingliu.mtabusclient;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class NextBusActivity extends AppCompatActivity {
   //TODO
@@ -43,7 +46,21 @@ public class NextBusActivity extends AppCompatActivity {
 
     mCollapsingToolbarLayout = (CollapsingToolbarLayout)
         findViewById(R.id.collapsing_toolbar_layout);
-//    mCollapsingToolbarLayout.setTitle("Kings Plaza");
+    mCollapsingToolbarLayout.setTitle("B9 - Kings Plaza");
+
+    mRecyclerView.addOnScrollListener(
+        new RecyclerView.OnScrollListener() {
+          @Override
+          public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+          }
+
+          @Override
+          public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+          }
+        }
+    );
 
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -55,6 +72,22 @@ public class NextBusActivity extends AppCompatActivity {
         (CoordinatorLayout.LayoutParams) mFloatingActionButton.getLayoutParams();
     layoutParams.setAnchorId(R.id.recycler_view);
     layoutParams.anchorGravity = Gravity.RIGHT;
+
+    mFloatingActionButton.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Snackbar
+                .make(mCoordinatorLayout, "An alarm is set at 1:00am", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                    Snackbar.make(mCoordinatorLayout, "Removed", Snackbar.LENGTH_SHORT).show();
+                  }
+                })
+                .show();
+          }
+        });
   }
 
   @Override

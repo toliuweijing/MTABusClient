@@ -1,5 +1,5 @@
 
-package com.siri.model;
+package com.obanyc.api.siri;
 
 import com.google.gson.annotations.Expose;
 
@@ -9,14 +9,14 @@ import javax.annotation.Generated;
 public class Extensions {
 
     @Expose
-    private com.siri.model.Distances Distances;
+    private com.obanyc.api.siri.Distances Distances;
 
     /**
      * 
      * @return
      *     The Distances
      */
-    public com.siri.model.Distances getDistances() {
+    public com.obanyc.api.siri.Distances getDistances() {
         return Distances;
     }
 
@@ -25,8 +25,13 @@ public class Extensions {
      * @param Distances
      *     The Distances
      */
-    public void setDistances(com.siri.model.Distances Distances) {
+    public void setDistances(com.obanyc.api.siri.Distances Distances) {
         this.Distances = Distances;
+    }
+
+    public Extensions withDistances(com.obanyc.api.siri.Distances Distances) {
+        this.Distances = Distances;
+        return this;
     }
 
 }

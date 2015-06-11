@@ -1,5 +1,5 @@
 
-package com.siri.model;
+package com.obanyc.api.siri;
 
 import com.google.gson.annotations.Expose;
 
@@ -12,7 +12,7 @@ import javax.annotation.Generated;
 public class StopMonitoringDelivery {
 
     @Expose
-    private List<com.siri.model.MonitoredStopVisit> MonitoredStopVisit = new ArrayList<com.siri.model.MonitoredStopVisit>();
+    private List<com.obanyc.api.siri.MonitoredStopVisit> MonitoredStopVisit = new ArrayList<com.obanyc.api.siri.MonitoredStopVisit>();
     @Expose
     private String ResponseTimestamp;
     @Expose
@@ -23,7 +23,7 @@ public class StopMonitoringDelivery {
      * @return
      *     The MonitoredStopVisit
      */
-    public List<com.siri.model.MonitoredStopVisit> getMonitoredStopVisit() {
+    public List<com.obanyc.api.siri.MonitoredStopVisit> getMonitoredStopVisit() {
         return MonitoredStopVisit;
     }
 
@@ -32,8 +32,13 @@ public class StopMonitoringDelivery {
      * @param MonitoredStopVisit
      *     The MonitoredStopVisit
      */
-    public void setMonitoredStopVisit(List<com.siri.model.MonitoredStopVisit> MonitoredStopVisit) {
+    public void setMonitoredStopVisit(List<com.obanyc.api.siri.MonitoredStopVisit> MonitoredStopVisit) {
         this.MonitoredStopVisit = MonitoredStopVisit;
+    }
+
+    public StopMonitoringDelivery withMonitoredStopVisit(List<com.obanyc.api.siri.MonitoredStopVisit> MonitoredStopVisit) {
+        this.MonitoredStopVisit = MonitoredStopVisit;
+        return this;
     }
 
     /**
@@ -54,6 +59,11 @@ public class StopMonitoringDelivery {
         this.ResponseTimestamp = ResponseTimestamp;
     }
 
+    public StopMonitoringDelivery withResponseTimestamp(String ResponseTimestamp) {
+        this.ResponseTimestamp = ResponseTimestamp;
+        return this;
+    }
+
     /**
      * 
      * @return
@@ -70,6 +80,11 @@ public class StopMonitoringDelivery {
      */
     public void setValidUntil(String ValidUntil) {
         this.ValidUntil = ValidUntil;
+    }
+
+    public StopMonitoringDelivery withValidUntil(String ValidUntil) {
+        this.ValidUntil = ValidUntil;
+        return this;
     }
 
 }

@@ -1,5 +1,5 @@
 
-package com.siri.model;
+package com.obanyc.api.siri;
 
 import com.google.gson.annotations.Expose;
 
@@ -9,7 +9,7 @@ import javax.annotation.Generated;
 public class MonitoredStopVisit {
 
     @Expose
-    private com.siri.model.MonitoredVehicleJourney MonitoredVehicleJourney;
+    private com.obanyc.api.siri.MonitoredVehicleJourney MonitoredVehicleJourney;
     @Expose
     private String RecordedAtTime;
 
@@ -18,7 +18,7 @@ public class MonitoredStopVisit {
      * @return
      *     The MonitoredVehicleJourney
      */
-    public com.siri.model.MonitoredVehicleJourney getMonitoredVehicleJourney() {
+    public com.obanyc.api.siri.MonitoredVehicleJourney getMonitoredVehicleJourney() {
         return MonitoredVehicleJourney;
     }
 
@@ -27,8 +27,13 @@ public class MonitoredStopVisit {
      * @param MonitoredVehicleJourney
      *     The MonitoredVehicleJourney
      */
-    public void setMonitoredVehicleJourney(com.siri.model.MonitoredVehicleJourney MonitoredVehicleJourney) {
+    public void setMonitoredVehicleJourney(com.obanyc.api.siri.MonitoredVehicleJourney MonitoredVehicleJourney) {
         this.MonitoredVehicleJourney = MonitoredVehicleJourney;
+    }
+
+    public MonitoredStopVisit withMonitoredVehicleJourney(com.obanyc.api.siri.MonitoredVehicleJourney MonitoredVehicleJourney) {
+        this.MonitoredVehicleJourney = MonitoredVehicleJourney;
+        return this;
     }
 
     /**
@@ -47,6 +52,11 @@ public class MonitoredStopVisit {
      */
     public void setRecordedAtTime(String RecordedAtTime) {
         this.RecordedAtTime = RecordedAtTime;
+    }
+
+    public MonitoredStopVisit withRecordedAtTime(String RecordedAtTime) {
+        this.RecordedAtTime = RecordedAtTime;
+        return this;
     }
 
 }

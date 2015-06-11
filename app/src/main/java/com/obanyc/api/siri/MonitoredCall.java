@@ -1,5 +1,5 @@
 
-package com.siri.model;
+package com.obanyc.api.siri;
 
 import com.google.gson.annotations.Expose;
 
@@ -9,11 +9,11 @@ import javax.annotation.Generated;
 public class MonitoredCall {
 
     @Expose
-    private com.siri.model.Extensions Extensions;
+    private com.obanyc.api.siri.Extensions Extensions;
     @Expose
     private String StopPointRef;
     @Expose
-    private int VisitNumber;
+    private long VisitNumber;
     @Expose
     private String StopPointName;
 
@@ -22,7 +22,7 @@ public class MonitoredCall {
      * @return
      *     The Extensions
      */
-    public com.siri.model.Extensions getExtensions() {
+    public com.obanyc.api.siri.Extensions getExtensions() {
         return Extensions;
     }
 
@@ -31,8 +31,13 @@ public class MonitoredCall {
      * @param Extensions
      *     The Extensions
      */
-    public void setExtensions(com.siri.model.Extensions Extensions) {
+    public void setExtensions(com.obanyc.api.siri.Extensions Extensions) {
         this.Extensions = Extensions;
+    }
+
+    public MonitoredCall withExtensions(com.obanyc.api.siri.Extensions Extensions) {
+        this.Extensions = Extensions;
+        return this;
     }
 
     /**
@@ -53,12 +58,17 @@ public class MonitoredCall {
         this.StopPointRef = StopPointRef;
     }
 
+    public MonitoredCall withStopPointRef(String StopPointRef) {
+        this.StopPointRef = StopPointRef;
+        return this;
+    }
+
     /**
      * 
      * @return
      *     The VisitNumber
      */
-    public int getVisitNumber() {
+    public long getVisitNumber() {
         return VisitNumber;
     }
 
@@ -67,8 +77,13 @@ public class MonitoredCall {
      * @param VisitNumber
      *     The VisitNumber
      */
-    public void setVisitNumber(int VisitNumber) {
+    public void setVisitNumber(long VisitNumber) {
         this.VisitNumber = VisitNumber;
+    }
+
+    public MonitoredCall withVisitNumber(long VisitNumber) {
+        this.VisitNumber = VisitNumber;
+        return this;
     }
 
     /**
@@ -87,6 +102,11 @@ public class MonitoredCall {
      */
     public void setStopPointName(String StopPointName) {
         this.StopPointName = StopPointName;
+    }
+
+    public MonitoredCall withStopPointName(String StopPointName) {
+        this.StopPointName = StopPointName;
+        return this;
     }
 
 }

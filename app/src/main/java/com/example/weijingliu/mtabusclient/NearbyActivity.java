@@ -20,8 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.weijingliu.mtabusclient.rest.RestApis;
-import com.example.weijingliu.mtabusclient.rest.service.SiriService;
-import com.siri.model.StopMonitoringDeliveryRoot;
+import com.obanyc.api.ObaService;
+import com.obanyc.api.where.ScheduleForStopRoot;
 
 import org.json.JSONObject;
 
@@ -91,24 +91,21 @@ public class NearbyActivity extends AppCompatActivity implements NearbyBusAdapte
   }
 
   private void testRetrofit() {
-    try {
-      SiriService.sInstance.getSiriApi().getSample(
-          new Callback<StopMonitoringDeliveryRoot>() {
-            @Override
-            public void success(StopMonitoringDeliveryRoot stopMonitoringDeliveryRoot, retrofit.client.Response response) {
-              Log.d(TAG, "YES");
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-              Log.e(TAG, error.getMessage());
-            }
+    ObaService.getClient().getScheduleForStop(
+        "MTA_307200",
+        "test",
+        new Callback<ScheduleForStopRoot>() {
+          @Override
+          public void success(ScheduleForStopRoot scheduleForStopRoot, retrofit.client.Response response) {
+            Log.d(TAG, "ScheduleForStopRoot");
           }
-      );
-    } catch (Throwable e) {
-      Log.e(TAG, e.getMessage());
-    }
-    Log.d(TAG, "yes");
+
+          @Override
+          public void failure(RetrofitError error) {
+            Log.d(TAG, error.getMessage());
+          }
+        }
+    );
   }
 
   private void testApi() {

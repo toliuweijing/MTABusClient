@@ -1,5 +1,5 @@
 
-package com.siri.model;
+package com.obanyc.api.siri;
 
 import com.google.gson.annotations.Expose;
 
@@ -16,7 +16,7 @@ public class MonitoredVehicleJourney {
     @Expose
     private String DirectionRef;
     @Expose
-    private com.siri.model.FramedVehicleJourneyRef FramedVehicleJourneyRef;
+    private com.obanyc.api.siri.FramedVehicleJourneyRef FramedVehicleJourneyRef;
     @Expose
     private String JourneyPatternRef;
     @Expose
@@ -36,9 +36,9 @@ public class MonitoredVehicleJourney {
     @Expose
     private boolean Monitored;
     @Expose
-    private com.siri.model.VehicleLocation VehicleLocation;
+    private com.obanyc.api.siri.VehicleLocation VehicleLocation;
     @Expose
-    private float Bearing;
+    private double Bearing;
     @Expose
     private String ProgressRate;
     @Expose
@@ -48,9 +48,9 @@ public class MonitoredVehicleJourney {
     @Expose
     private String VehicleRef;
     @Expose
-    private com.siri.model.MonitoredCall MonitoredCall;
+    private com.obanyc.api.siri.MonitoredCall MonitoredCall;
     @Expose
-    private com.siri.model.OnwardCalls OnwardCalls;
+    private com.obanyc.api.siri.OnwardCalls OnwardCalls;
 
     /**
      * 
@@ -68,6 +68,11 @@ public class MonitoredVehicleJourney {
      */
     public void setLineRef(String LineRef) {
         this.LineRef = LineRef;
+    }
+
+    public MonitoredVehicleJourney withLineRef(String LineRef) {
+        this.LineRef = LineRef;
+        return this;
     }
 
     /**
@@ -88,12 +93,17 @@ public class MonitoredVehicleJourney {
         this.DirectionRef = DirectionRef;
     }
 
+    public MonitoredVehicleJourney withDirectionRef(String DirectionRef) {
+        this.DirectionRef = DirectionRef;
+        return this;
+    }
+
     /**
      * 
      * @return
      *     The FramedVehicleJourneyRef
      */
-    public com.siri.model.FramedVehicleJourneyRef getFramedVehicleJourneyRef() {
+    public com.obanyc.api.siri.FramedVehicleJourneyRef getFramedVehicleJourneyRef() {
         return FramedVehicleJourneyRef;
     }
 
@@ -102,8 +112,13 @@ public class MonitoredVehicleJourney {
      * @param FramedVehicleJourneyRef
      *     The FramedVehicleJourneyRef
      */
-    public void setFramedVehicleJourneyRef(com.siri.model.FramedVehicleJourneyRef FramedVehicleJourneyRef) {
+    public void setFramedVehicleJourneyRef(com.obanyc.api.siri.FramedVehicleJourneyRef FramedVehicleJourneyRef) {
         this.FramedVehicleJourneyRef = FramedVehicleJourneyRef;
+    }
+
+    public MonitoredVehicleJourney withFramedVehicleJourneyRef(com.obanyc.api.siri.FramedVehicleJourneyRef FramedVehicleJourneyRef) {
+        this.FramedVehicleJourneyRef = FramedVehicleJourneyRef;
+        return this;
     }
 
     /**
@@ -124,6 +139,11 @@ public class MonitoredVehicleJourney {
         this.JourneyPatternRef = JourneyPatternRef;
     }
 
+    public MonitoredVehicleJourney withJourneyPatternRef(String JourneyPatternRef) {
+        this.JourneyPatternRef = JourneyPatternRef;
+        return this;
+    }
+
     /**
      * 
      * @return
@@ -140,6 +160,11 @@ public class MonitoredVehicleJourney {
      */
     public void setPublishedLineName(String PublishedLineName) {
         this.PublishedLineName = PublishedLineName;
+    }
+
+    public MonitoredVehicleJourney withPublishedLineName(String PublishedLineName) {
+        this.PublishedLineName = PublishedLineName;
+        return this;
     }
 
     /**
@@ -160,6 +185,11 @@ public class MonitoredVehicleJourney {
         this.OperatorRef = OperatorRef;
     }
 
+    public MonitoredVehicleJourney withOperatorRef(String OperatorRef) {
+        this.OperatorRef = OperatorRef;
+        return this;
+    }
+
     /**
      * 
      * @return
@@ -176,6 +206,11 @@ public class MonitoredVehicleJourney {
      */
     public void setOriginRef(String OriginRef) {
         this.OriginRef = OriginRef;
+    }
+
+    public MonitoredVehicleJourney withOriginRef(String OriginRef) {
+        this.OriginRef = OriginRef;
+        return this;
     }
 
     /**
@@ -196,6 +231,11 @@ public class MonitoredVehicleJourney {
         this.DestinationRef = DestinationRef;
     }
 
+    public MonitoredVehicleJourney withDestinationRef(String DestinationRef) {
+        this.DestinationRef = DestinationRef;
+        return this;
+    }
+
     /**
      * 
      * @return
@@ -212,6 +252,11 @@ public class MonitoredVehicleJourney {
      */
     public void setDestinationName(String DestinationName) {
         this.DestinationName = DestinationName;
+    }
+
+    public MonitoredVehicleJourney withDestinationName(String DestinationName) {
+        this.DestinationName = DestinationName;
+        return this;
     }
 
     /**
@@ -232,6 +277,11 @@ public class MonitoredVehicleJourney {
         this.OriginAimedDepartureTime = OriginAimedDepartureTime;
     }
 
+    public MonitoredVehicleJourney withOriginAimedDepartureTime(String OriginAimedDepartureTime) {
+        this.OriginAimedDepartureTime = OriginAimedDepartureTime;
+        return this;
+    }
+
     /**
      * 
      * @return
@@ -248,6 +298,11 @@ public class MonitoredVehicleJourney {
      */
     public void setSituationRef(List<Object> SituationRef) {
         this.SituationRef = SituationRef;
+    }
+
+    public MonitoredVehicleJourney withSituationRef(List<Object> SituationRef) {
+        this.SituationRef = SituationRef;
+        return this;
     }
 
     /**
@@ -268,12 +323,17 @@ public class MonitoredVehicleJourney {
         this.Monitored = Monitored;
     }
 
+    public MonitoredVehicleJourney withMonitored(boolean Monitored) {
+        this.Monitored = Monitored;
+        return this;
+    }
+
     /**
      * 
      * @return
      *     The VehicleLocation
      */
-    public com.siri.model.VehicleLocation getVehicleLocation() {
+    public com.obanyc.api.siri.VehicleLocation getVehicleLocation() {
         return VehicleLocation;
     }
 
@@ -282,8 +342,13 @@ public class MonitoredVehicleJourney {
      * @param VehicleLocation
      *     The VehicleLocation
      */
-    public void setVehicleLocation(com.siri.model.VehicleLocation VehicleLocation) {
+    public void setVehicleLocation(com.obanyc.api.siri.VehicleLocation VehicleLocation) {
         this.VehicleLocation = VehicleLocation;
+    }
+
+    public MonitoredVehicleJourney withVehicleLocation(com.obanyc.api.siri.VehicleLocation VehicleLocation) {
+        this.VehicleLocation = VehicleLocation;
+        return this;
     }
 
     /**
@@ -291,7 +356,7 @@ public class MonitoredVehicleJourney {
      * @return
      *     The Bearing
      */
-    public float getBearing() {
+    public double getBearing() {
         return Bearing;
     }
 
@@ -300,8 +365,13 @@ public class MonitoredVehicleJourney {
      * @param Bearing
      *     The Bearing
      */
-    public void setBearing(float Bearing) {
+    public void setBearing(double Bearing) {
         this.Bearing = Bearing;
+    }
+
+    public MonitoredVehicleJourney withBearing(double Bearing) {
+        this.Bearing = Bearing;
+        return this;
     }
 
     /**
@@ -322,6 +392,11 @@ public class MonitoredVehicleJourney {
         this.ProgressRate = ProgressRate;
     }
 
+    public MonitoredVehicleJourney withProgressRate(String ProgressRate) {
+        this.ProgressRate = ProgressRate;
+        return this;
+    }
+
     /**
      * 
      * @return
@@ -338,6 +413,11 @@ public class MonitoredVehicleJourney {
      */
     public void setProgressStatus(String ProgressStatus) {
         this.ProgressStatus = ProgressStatus;
+    }
+
+    public MonitoredVehicleJourney withProgressStatus(String ProgressStatus) {
+        this.ProgressStatus = ProgressStatus;
+        return this;
     }
 
     /**
@@ -358,6 +438,11 @@ public class MonitoredVehicleJourney {
         this.BlockRef = BlockRef;
     }
 
+    public MonitoredVehicleJourney withBlockRef(String BlockRef) {
+        this.BlockRef = BlockRef;
+        return this;
+    }
+
     /**
      * 
      * @return
@@ -376,12 +461,17 @@ public class MonitoredVehicleJourney {
         this.VehicleRef = VehicleRef;
     }
 
+    public MonitoredVehicleJourney withVehicleRef(String VehicleRef) {
+        this.VehicleRef = VehicleRef;
+        return this;
+    }
+
     /**
      * 
      * @return
      *     The MonitoredCall
      */
-    public com.siri.model.MonitoredCall getMonitoredCall() {
+    public com.obanyc.api.siri.MonitoredCall getMonitoredCall() {
         return MonitoredCall;
     }
 
@@ -390,8 +480,13 @@ public class MonitoredVehicleJourney {
      * @param MonitoredCall
      *     The MonitoredCall
      */
-    public void setMonitoredCall(com.siri.model.MonitoredCall MonitoredCall) {
+    public void setMonitoredCall(com.obanyc.api.siri.MonitoredCall MonitoredCall) {
         this.MonitoredCall = MonitoredCall;
+    }
+
+    public MonitoredVehicleJourney withMonitoredCall(com.obanyc.api.siri.MonitoredCall MonitoredCall) {
+        this.MonitoredCall = MonitoredCall;
+        return this;
     }
 
     /**
@@ -399,7 +494,7 @@ public class MonitoredVehicleJourney {
      * @return
      *     The OnwardCalls
      */
-    public com.siri.model.OnwardCalls getOnwardCalls() {
+    public com.obanyc.api.siri.OnwardCalls getOnwardCalls() {
         return OnwardCalls;
     }
 
@@ -408,8 +503,13 @@ public class MonitoredVehicleJourney {
      * @param OnwardCalls
      *     The OnwardCalls
      */
-    public void setOnwardCalls(com.siri.model.OnwardCalls OnwardCalls) {
+    public void setOnwardCalls(com.obanyc.api.siri.OnwardCalls OnwardCalls) {
         this.OnwardCalls = OnwardCalls;
+    }
+
+    public MonitoredVehicleJourney withOnwardCalls(com.obanyc.api.siri.OnwardCalls OnwardCalls) {
+        this.OnwardCalls = OnwardCalls;
+        return this;
     }
 
 }

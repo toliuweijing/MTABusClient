@@ -1,5 +1,5 @@
 
-package com.siri.model;
+package com.obanyc.api.siri;
 
 import com.google.gson.annotations.Expose;
 
@@ -31,6 +31,11 @@ public class FramedVehicleJourneyRef {
         this.DataFrameRef = DataFrameRef;
     }
 
+    public FramedVehicleJourneyRef withDataFrameRef(String DataFrameRef) {
+        this.DataFrameRef = DataFrameRef;
+        return this;
+    }
+
     /**
      * 
      * @return
@@ -47,6 +52,11 @@ public class FramedVehicleJourneyRef {
      */
     public void setDatedVehicleJourneyRef(String DatedVehicleJourneyRef) {
         this.DatedVehicleJourneyRef = DatedVehicleJourneyRef;
+    }
+
+    public FramedVehicleJourneyRef withDatedVehicleJourneyRef(String DatedVehicleJourneyRef) {
+        this.DatedVehicleJourneyRef = DatedVehicleJourneyRef;
+        return this;
     }
 
 }

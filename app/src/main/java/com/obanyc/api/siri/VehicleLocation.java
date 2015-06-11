@@ -1,5 +1,5 @@
 
-package com.siri.model;
+package com.obanyc.api.siri;
 
 import com.google.gson.annotations.Expose;
 
@@ -9,16 +9,16 @@ import javax.annotation.Generated;
 public class VehicleLocation {
 
     @Expose
-    private float Longitude;
+    private double Longitude;
     @Expose
-    private float Latitude;
+    private double Latitude;
 
     /**
      * 
      * @return
      *     The Longitude
      */
-    public float getLongitude() {
+    public double getLongitude() {
         return Longitude;
     }
 
@@ -27,8 +27,13 @@ public class VehicleLocation {
      * @param Longitude
      *     The Longitude
      */
-    public void setLongitude(float Longitude) {
+    public void setLongitude(double Longitude) {
         this.Longitude = Longitude;
+    }
+
+    public VehicleLocation withLongitude(double Longitude) {
+        this.Longitude = Longitude;
+        return this;
     }
 
     /**
@@ -36,7 +41,7 @@ public class VehicleLocation {
      * @return
      *     The Latitude
      */
-    public float getLatitude() {
+    public double getLatitude() {
         return Latitude;
     }
 
@@ -45,8 +50,13 @@ public class VehicleLocation {
      * @param Latitude
      *     The Latitude
      */
-    public void setLatitude(float Latitude) {
+    public void setLatitude(double Latitude) {
         this.Latitude = Latitude;
+    }
+
+    public VehicleLocation withLatitude(double Latitude) {
+        this.Latitude = Latitude;
+        return this;
     }
 
 }

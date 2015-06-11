@@ -1,5 +1,5 @@
 
-package com.siri.model;
+package com.obanyc.api.siri;
 
 import com.google.gson.annotations.Expose;
 
@@ -14,7 +14,7 @@ public class ServiceDelivery {
     @Expose
     private String ResponseTimestamp;
     @Expose
-    private List<com.siri.model.StopMonitoringDelivery> StopMonitoringDelivery = new ArrayList<com.siri.model.StopMonitoringDelivery>();
+    private List<com.obanyc.api.siri.StopMonitoringDelivery> StopMonitoringDelivery = new ArrayList<com.obanyc.api.siri.StopMonitoringDelivery>();
     @Expose
     private List<Object> SituationExchangeDelivery = new ArrayList<Object>();
 
@@ -36,12 +36,17 @@ public class ServiceDelivery {
         this.ResponseTimestamp = ResponseTimestamp;
     }
 
+    public ServiceDelivery withResponseTimestamp(String ResponseTimestamp) {
+        this.ResponseTimestamp = ResponseTimestamp;
+        return this;
+    }
+
     /**
      * 
      * @return
      *     The StopMonitoringDelivery
      */
-    public List<com.siri.model.StopMonitoringDelivery> getStopMonitoringDelivery() {
+    public List<com.obanyc.api.siri.StopMonitoringDelivery> getStopMonitoringDelivery() {
         return StopMonitoringDelivery;
     }
 
@@ -50,8 +55,13 @@ public class ServiceDelivery {
      * @param StopMonitoringDelivery
      *     The StopMonitoringDelivery
      */
-    public void setStopMonitoringDelivery(List<com.siri.model.StopMonitoringDelivery> StopMonitoringDelivery) {
+    public void setStopMonitoringDelivery(List<com.obanyc.api.siri.StopMonitoringDelivery> StopMonitoringDelivery) {
         this.StopMonitoringDelivery = StopMonitoringDelivery;
+    }
+
+    public ServiceDelivery withStopMonitoringDelivery(List<com.obanyc.api.siri.StopMonitoringDelivery> StopMonitoringDelivery) {
+        this.StopMonitoringDelivery = StopMonitoringDelivery;
+        return this;
     }
 
     /**
@@ -70,6 +80,11 @@ public class ServiceDelivery {
      */
     public void setSituationExchangeDelivery(List<Object> SituationExchangeDelivery) {
         this.SituationExchangeDelivery = SituationExchangeDelivery;
+    }
+
+    public ServiceDelivery withSituationExchangeDelivery(List<Object> SituationExchangeDelivery) {
+        this.SituationExchangeDelivery = SituationExchangeDelivery;
+        return this;
     }
 
 }

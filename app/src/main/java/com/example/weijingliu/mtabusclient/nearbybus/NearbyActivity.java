@@ -1,4 +1,4 @@
-package com.example.weijingliu.mtabusclient;
+package com.example.weijingliu.mtabusclient.nearbybus;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
@@ -19,10 +19,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.weijingliu.mtabusclient.rest.RestApis;
+import com.example.weijingliu.mtabusclient.NextBusActivity;
+import com.example.weijingliu.mtabusclient.R;
 import com.obanyc.api.ObaService;
-import com.obanyc.api.where.ScheduleForStopRoot;
-import com.obanyc.api.where.StopsForLocationRoot;
+import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
 
 import org.json.JSONObject;
 
@@ -119,28 +119,6 @@ public class NearbyActivity extends AppCompatActivity implements NearbyBusAdapte
             Log.d(TAG, error.getMessage());
           }
         });
-  }
-
-  private void testApi() {
-    String url = RestApis.Siri.stopMonitoring(RestApis.SAMPLE_STOP_CODE).toString();
-    Log.d(TAG, url);
-
-    JsonObjectRequest request = new JsonObjectRequest(
-        url,
-        null,
-        new Response.Listener<JSONObject>() {
-          @Override
-          public void onResponse(JSONObject jsonObject) {
-            Log.d(TAG, jsonObject.toString());
-          }
-        },
-        new Response.ErrorListener() {
-          @Override
-          public void onErrorResponse(VolleyError volleyError) {
-            Log.e("TAG", volleyError.toString());
-          }
-        });
-    mRequestQueue.add(request);
   }
 
   @Override

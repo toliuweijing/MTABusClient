@@ -1,5 +1,5 @@
 
-package com.obanyc.api.where;
+package com.obanyc.api.where.scheduleforstop;
 
 import com.google.gson.annotations.Expose;
 

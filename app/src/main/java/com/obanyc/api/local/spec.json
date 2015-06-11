@@ -1,0 +1,22 @@
+{
+  "route": {
+    "color": "EE352E",
+	"description": "via 60th St / Avenue M",
+	"id": "MTA NYCT_B9",
+	"longName": "Bay Ridge - Kings Plaza",
+	"shortName": "B9",
+	"textColor": "FFFFFF"
+  },
+  "stop": {
+    "code": "300067",
+	"direction": "S",
+	"id": "MTA_300067",
+	"lat": 40.637878,
+	"lon": -74.034088,
+	"name": "NARROWS AV/BAY RIDGE AV"
+  },
+  "direction": {
+    "id": "1",
+    "destinationName": "BAY RIDGE SHORE RD via BROADWAY"
+  }
+}

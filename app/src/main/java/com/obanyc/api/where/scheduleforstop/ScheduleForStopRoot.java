@@ -1,12 +1,12 @@
 
-package com.obanyc.api.where;
+package com.obanyc.api.where.scheduleforstop;
 
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class StopsForLocationRoot {
+public class ScheduleForStopRoot {
 
     @Expose
     private long code;
@@ -37,7 +37,7 @@ public class StopsForLocationRoot {
         this.code = code;
     }
 
-    public StopsForLocationRoot withCode(long code) {
+    public ScheduleForStopRoot withCode(long code) {
         this.code = code;
         return this;
     }
@@ -60,7 +60,7 @@ public class StopsForLocationRoot {
         this.currentTime = currentTime;
     }
 
-    public StopsForLocationRoot withCurrentTime(long currentTime) {
+    public ScheduleForStopRoot withCurrentTime(long currentTime) {
         this.currentTime = currentTime;
         return this;
     }
@@ -83,7 +83,7 @@ public class StopsForLocationRoot {
         this.data = data;
     }
 
-    public StopsForLocationRoot withData(Data data) {
+    public ScheduleForStopRoot withData(Data data) {
         this.data = data;
         return this;
     }
@@ -106,7 +106,7 @@ public class StopsForLocationRoot {
         this.text = text;
     }
 
-    public StopsForLocationRoot withText(String text) {
+    public ScheduleForStopRoot withText(String text) {
         this.text = text;
         return this;
     }
@@ -129,7 +129,7 @@ public class StopsForLocationRoot {
         this.version = version;
     }
 
-    public StopsForLocationRoot withVersion(long version) {
+    public ScheduleForStopRoot withVersion(long version) {
         this.version = version;
         return this;
     }

@@ -13,6 +13,7 @@
         android:src="@drawable/ic_directions_bus_black_48dp"/>
 
     <TextView
+        android:id="@+id/bus_short_name_text"
         android:layout_marginLeft="72dp"
         android:layout_marginTop="30dp"
         android:layout_gravity="left|top"
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:id="@+id/bus_destination_text_1"
         android:layout_marginLeft="72dp"
         android:textAppearance="@android:style/TextAppearance.Small"
         android:textStyle="bold"
@@ -34,6 +36,7 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:id="@+id/bus_destination_text_2"
         android:layout_marginLeft="72dp"
         android:layout_marginBottom="60dp"
         android:layout_gravity="left|bottom"

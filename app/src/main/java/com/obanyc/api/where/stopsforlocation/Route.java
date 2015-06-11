@@ -1,5 +1,5 @@
 
-package com.obanyc.api.where;
+package com.obanyc.api.where.stopsforlocation;
 
 import com.google.gson.annotations.Expose;
 
@@ -9,7 +9,7 @@ import javax.annotation.Generated;
 public class Route {
 
     @Expose
-    private String agencyId;
+    private Agency agency;
     @Expose
     private String color;
     @Expose
@@ -30,23 +30,23 @@ public class Route {
     /**
      * 
      * @return
-     *     The agencyId
+     *     The agency
      */
-    public String getAgencyId() {
-        return agencyId;
+    public Agency getAgency() {
+        return agency;
     }
 
     /**
      * 
-     * @param agencyId
-     *     The agencyId
+     * @param agency
+     *     The agency
      */
-    public void setAgencyId(String agencyId) {
-        this.agencyId = agencyId;
+    public void setAgency(Agency agency) {
+        this.agency = agency;
     }
 
-    public Route withAgencyId(String agencyId) {
-        this.agencyId = agencyId;
+    public Route withAgency(Agency agency) {
+        this.agency = agency;
         return this;
     }
 

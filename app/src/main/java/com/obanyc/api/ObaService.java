@@ -1,8 +1,8 @@
 package com.obanyc.api;
 
 import com.obanyc.api.siri.StopMonitoringRoot;
-import com.obanyc.api.where.ScheduleForStopRoot;
-import com.obanyc.api.where.StopsForLocationRoot;
+import com.obanyc.api.where.scheduleforstop.ScheduleForStopRoot;
+import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;

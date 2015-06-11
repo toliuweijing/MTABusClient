@@ -2,6 +2,7 @@ package com.obanyc.api;
 
 import com.obanyc.api.siri.StopMonitoringRoot;
 import com.obanyc.api.where.ScheduleForStopRoot;
+import com.obanyc.api.where.StopsForLocationRoot;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -46,5 +47,8 @@ public class ObaService {
         @Path("stopref") String stopRef,
         @Query("key") String key,
         Callback<ScheduleForStopRoot> callback);
+
+    @GET("/api/where/stops-for-location.json?lat=40.638243&lon=-74.034466&latSpan=0.005&lonSpan=0.005&key=test")
+    void getStopsForLocation(Callback<StopsForLocationRoot> callback);
   }
 }

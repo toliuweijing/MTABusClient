@@ -22,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.weijingliu.mtabusclient.rest.RestApis;
 import com.obanyc.api.ObaService;
 import com.obanyc.api.where.ScheduleForStopRoot;
+import com.obanyc.api.where.StopsForLocationRoot;
 
 import org.json.JSONObject;
 
@@ -91,21 +92,33 @@ public class NearbyActivity extends AppCompatActivity implements NearbyBusAdapte
   }
 
   private void testRetrofit() {
-    ObaService.getClient().getScheduleForStop(
-        "MTA_307200",
-        "test",
-        new Callback<ScheduleForStopRoot>() {
+//    ObaService.getClient().getScheduleForStop(
+//        "MTA_307200",
+//        "test",
+//        new Callback<ScheduleForStopRoot>() {
+//          @Override
+//          public void success(ScheduleForStopRoot scheduleForStopRoot, retrofit.client.Response response) {
+//            Log.d(TAG, "ScheduleForStopRoot");
+//          }
+//
+//          @Override
+//          public void failure(RetrofitError error) {
+//            Log.d(TAG, error.getMessage());
+//          }
+//        }
+//    );
+    ObaService.getClient().getStopsForLocation(
+        new Callback<StopsForLocationRoot>() {
           @Override
-          public void success(ScheduleForStopRoot scheduleForStopRoot, retrofit.client.Response response) {
-            Log.d(TAG, "ScheduleForStopRoot");
+          public void success(StopsForLocationRoot stopsForLocationRoot, retrofit.client.Response response) {
+            Log.d(TAG, "StopsForLocation");
           }
 
           @Override
           public void failure(RetrofitError error) {
             Log.d(TAG, error.getMessage());
           }
-        }
-    );
+        });
   }
 
   private void testApi() {

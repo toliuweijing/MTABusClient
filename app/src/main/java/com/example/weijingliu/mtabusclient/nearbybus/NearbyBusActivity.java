@@ -19,15 +19,17 @@ import android.view.MenuItem;
 
 import com.example.weijingliu.mtabusclient.NextBusActivity;
 import com.example.weijingliu.mtabusclient.R;
-import com.google.common.util.concurrent.FutureCallback;
 import com.obanyc.api.LocalService;
 import com.obanyc.api.ObaService;
 import com.obanyc.api.local.Queries;
 import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
 
+import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAdapter.Listener {
   private static final String TAG = NearbyBusActivity.class.getSimpleName();
@@ -54,23 +56,24 @@ public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAda
   private void testLocalService() {
     LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-    LocalService.instance.nearbyRouteDirections(location)
-       .subscribe(new Subscriber<Queries.RouteDirections>() {
-         @Override
-         public void onCompleted() {
+    LocalService.instance.nearbyRouteDirections(location).toList()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Subscriber<List<Queries.RouteDirections>>() {
+          @Override
+          public void onCompleted() {
 
-         }
+          }
 
-         @Override
-         public void onError(Throwable e) {
-           Log.e(TAG, e.getMessage());
-         }
+          @Override
+          public void onError(Throwable e) {
 
-         @Override
-         public void onNext(Queries.RouteDirections routeDirections) {
-          Log.d(TAG, "yes");
-         }
-       });
+          }
+
+          @Override
+          public void onNext(List<Queries.RouteDirections> routeDirectionses) {
+            mNearbyBusAdapter.setRouteDirections(routeDirectionses);
+          }
+        });
   }
 
   private void init() {

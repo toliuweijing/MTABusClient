@@ -8,12 +8,12 @@ import com.google.auto.value.AutoValue;
 public class Primitives {
   @AutoValue
   public abstract static class Route {
-    abstract String color();
-    abstract String description();
-    abstract String id();
-    abstract String longName();
-    abstract String shortName();
-    abstract String textColor();
+    public abstract String color();
+    public abstract String description();
+    public abstract String id();
+    public abstract String longName();
+    public abstract String shortName();
+    public abstract String textColor();
 
     public static Route create(
         String color,
@@ -28,12 +28,12 @@ public class Primitives {
 
   @AutoValue
   public abstract static class Stop {
-    abstract String code();
-    abstract String direction();
-    abstract String id();
-    abstract double lat();
-    abstract double lon();
-    abstract String name();
+    public abstract String code();
+    public abstract String direction();
+    public abstract String id();
+    public abstract double lat();
+    public abstract double lon();
+    public abstract String name();
 
     public static Stop create(
         String code,
@@ -48,8 +48,8 @@ public class Primitives {
 
   @AutoValue
   public abstract static class Direction {
-    abstract String id();
-    abstract String destination();
+    public abstract String id();
+    public abstract String destination();
 
     public static Direction create(
         String id,

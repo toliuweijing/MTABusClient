@@ -15,11 +15,6 @@ public class Utils {
     return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
   }
 
-  public static List<NearbyBusAdapter.Model> toNearbyBusAdapterModels(StopsForLocationRoot root) {
-    List<NearbyBusAdapter.Model> models = new ArrayList<>();
-    return models;
-  }
-
   public static float distanceTo(
       Location a,
       double latitude,

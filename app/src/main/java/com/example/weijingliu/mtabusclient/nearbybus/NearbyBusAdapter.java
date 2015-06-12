@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +14,11 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.weijingliu.mtabusclient.R;
-import com.obanyc.api.where.scheduleforstop.Route;
+import com.example.weijingliu.mtabusclient.Utils;
+import com.obanyc.api.local.Primitives;
+import com.obanyc.api.local.Primitives.Route;
+import com.obanyc.api.local.Queries;
+import com.obanyc.api.local.Queries.RouteDirections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +26,7 @@ import java.util.List;
 public class NearbyBusAdapter extends RecyclerView.Adapter<NearbyBusAdapter.ViewHolder> {
   private static final String TAG = NearbyBusAdapter.class.getSimpleName();
 
-  public static class Model {
-    Route route;
-    String destination1;
-    String getDestination2;
-  }
-
-  private List<Model> mModels = new ArrayList<>();
-
-  public void setModels(List<Model> models) {
-    mModels.clear();
-    mModels.addAll(models);
-    notifyDataSetChanged();
-  }
+  private List<RouteDirections> mRouteDirections = new ArrayList<>();
 
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -53,19 +46,32 @@ public class NearbyBusAdapter extends RecyclerView.Adapter<NearbyBusAdapter.View
 
   @Override
   public void onBindViewHolder(ViewHolder viewHolder, int i) {
-    Model model = mModels.get(i);
-    viewHolder.shortNameText.setText(model.route.getShortName());
-    viewHolder.destinationText1.setText(model.destination1);
-    viewHolder.destinationText2.setText(model.getDestination2);
+    RouteDirections routeDirections = mRouteDirections.get(i);
+    Route route = routeDirections.route();
+    Primitives.Direction direction1 = routeDirections.directions().get(0);
+    Primitives.Direction direction2 = routeDirections.directions().get(1);
+
+    GradientDrawable gradientDrawable = new GradientDrawable();
+    gradientDrawable.setColor(Color.parseColor("#" + route.color()));
+    gradientDrawable.setCornerRadius(Utils.px(4));
+    viewHolder.shortNameText.setText(route.shortName());
+    viewHolder.shortNameText.setBackgroundDrawable(gradientDrawable);
+    viewHolder.destinationText1.setText(direction1.destination());
+    viewHolder.destinationText2.setText(direction2.destination());
   }
 
   @Override
   public int getItemCount() {
-    return mModels.size();
+    return mRouteDirections.size();
   }
 
   public void setListener(Listener listener) {
     mListener = listener;
+  }
+
+  public void setRouteDirections(List<RouteDirections> routeDirections) {
+    this.mRouteDirections = routeDirections;
+    notifyDataSetChanged();
   }
 
   interface Listener {

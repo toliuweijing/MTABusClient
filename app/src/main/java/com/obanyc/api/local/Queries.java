@@ -9,7 +9,7 @@ import java.util.List;
 public class Queries {
   @AutoValue
   public abstract static class NearbyBusQuery {
-    abstract List<RouteDirections> routeStopDirections();
+    public abstract List<RouteDirections> routeStopDirections();
 
     public static NearbyBusQuery create(List<RouteDirections> a) {
       return new AutoValue_Queries_NearbyBusQuery(a);
@@ -18,8 +18,8 @@ public class Queries {
 
   @AutoValue
   public abstract static class RouteDirections {
-    abstract Route route();
-    abstract List<Direction> directions();
+    public abstract Route route();
+    public abstract List<Direction> directions();
 
     public static RouteDirections create(
         Route route,

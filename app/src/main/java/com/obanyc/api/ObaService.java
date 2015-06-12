@@ -5,21 +5,33 @@ import com.obanyc.api.where.scheduleforstop.ScheduleForStopRoot;
 import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
 
 import retrofit.Callback;
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import rx.Observable;
 
 public class ObaService {
   private static final ObaService instance = new ObaService();
+
+  private static final String KEY = "cfb3c75b-5a43-4e66-b7f8-14e666b0c1c1";
+  private static final String END_POINT = "http://api.prod.obanyc.com";
 
   private final RestAdapter mRestAdapter;
   private final Client mClient;
 
   private ObaService() {
+    RequestInterceptor interceptor = new RequestInterceptor() {
+      @Override
+      public void intercept(RequestFacade request) {
+        request.addQueryParam("key",  KEY);
+      }};
+
     mRestAdapter = new RestAdapter.Builder()
-        .setEndpoint("http://api.prod.obanyc.com")
+        .setEndpoint(END_POINT)
         .setLogLevel(RestAdapter.LogLevel.FULL)
+        .setRequestInterceptor(interceptor)
         .build();
 
     mClient = mRestAdapter.create(Client.class);
@@ -50,5 +62,13 @@ public class ObaService {
 
     @GET("/api/where/stops-for-location.json?lat=40.638243&lon=-74.034466&latSpan=0.005&lonSpan=0.005&key=test")
     void getStopsForLocation(Callback<StopsForLocationRoot> callback);
+
+    @GET("/api/where/stops-for-location.json")
+    Observable<StopsForLocationRoot> getStopsForLocation(
+        @Query("lat") double latitude,
+        @Query("lon") double longitude);
   }
+
 }
+
+//    http://bustime.mta.info/api/where/stops-for-location.json?lat=40.638243&lon=-74.034466&radius=1000&key=test

@@ -27,6 +27,7 @@ import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
+import rx.Subscriber;
 
 public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAdapter.Listener {
   private static final String TAG = NearbyBusActivity.class.getSimpleName();
@@ -53,17 +54,23 @@ public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAda
   private void testLocalService() {
     LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-    LocalService.instance.nearbyBusQuery(location, new FutureCallback<Queries.NearbyBusQuery>() {
-      @Override
-      public void onSuccess(Queries.NearbyBusQuery result) {
-        Log.d(TAG, "LocalServiceNearbyQuery");
-      }
+    LocalService.instance.nearbyRouteDirections(location)
+       .subscribe(new Subscriber<Queries.RouteDirections>() {
+         @Override
+         public void onCompleted() {
 
-      @Override
-      public void onFailure(Throwable t) {
-        Log.d(TAG, t.getMessage());
-      }
-    });
+         }
+
+         @Override
+         public void onError(Throwable e) {
+           Log.e(TAG, e.getMessage());
+         }
+
+         @Override
+         public void onNext(Queries.RouteDirections routeDirections) {
+          Log.d(TAG, "yes");
+         }
+       });
   }
 
   private void init() {

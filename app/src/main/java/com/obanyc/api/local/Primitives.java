@@ -14,6 +14,16 @@ public class Primitives {
     abstract String longName();
     abstract String shortName();
     abstract String textColor();
+
+    public static Route create(
+        String color,
+        String description,
+        String id,
+        String longName,
+        String shortName,
+        String textColor) {
+      return new AutoValue_Primitives_Route(color, description, id, longName, shortName, textColor);
+    }
   }
 
   @AutoValue
@@ -24,11 +34,27 @@ public class Primitives {
     abstract double lat();
     abstract double lon();
     abstract String name();
+
+    public static Stop create(
+        String code,
+        String direction,
+        String id,
+        double lat,
+        double lon,
+        String name) {
+      return new AutoValue_Primitives_Stop(code, direction, id, lat, lon, name);
+    }
   }
 
   @AutoValue
   public abstract static class Direction {
     abstract String id();
     abstract String destination();
+
+    public static Direction create(
+        String id,
+        String destination) {
+      return new AutoValue_Primitives_Direction(id, destination);
+    }
   }
 }

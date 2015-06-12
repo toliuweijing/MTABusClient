@@ -96,13 +96,14 @@
     <orderEntry type="library" exported="" name="recyclerview-v7-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="rxjava-1.0.10" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.9.0" level="project" />
-    <orderEntry type="library" exported="" name="jackson-databind-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="javax.annotation-api-1.2" level="project" />
+    <orderEntry type="library" exported="" name="jackson-databind-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="jackson-annotations-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="ScheduleForStopRoot-sources" level="project" />
     <orderEntry type="library" exported="" name="auto-value-1.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="StopsForRouteRoot-sources" level="project" />
     <orderEntry type="library" exported="" name="RouteStopDirection-sources" level="project" />
     <orderEntry type="library" exported="" name="guava-11.0.2" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.0" level="project" />

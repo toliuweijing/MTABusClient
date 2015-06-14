@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     >
-    <com.example.weijingliu.mtabusclient.LolipopView
+    <com.example.weijingliu.mtabusclient.nextbus.LolipopView
         android:id="@+id/lolipop"
         android:layout_width="20dp"
         android:layout_height="match_parent"

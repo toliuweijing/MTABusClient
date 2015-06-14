@@ -56,10 +56,7 @@ public class ObaService {
     void getScheduleForStop(Callback<ScheduleForStopRoot> callback);
 
     @GET("/api/where/schedule-for-stop/{stopref}.json")
-    void getScheduleForStop(
-        @Path("stopref") String stopRef,
-        @Query("key") String key,
-        Callback<ScheduleForStopRoot> callback);
+    Observable<ScheduleForStopRoot> getScheduleForStop(@Path("stopref") String stopRef);
 
     @GET("/api/where/stops-for-location.json?lat=40.638243&lon=-74.034466&latSpan=0.005&lonSpan=0.005&key=test")
     void getStopsForLocation(Callback<StopsForLocationRoot> callback);

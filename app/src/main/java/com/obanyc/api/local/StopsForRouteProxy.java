@@ -1,8 +1,10 @@
 package com.obanyc.api.local;
 
 import android.location.Location;
+import android.util.ArrayMap;
 
 import com.example.weijingliu.mtabusclient.Utils;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.obanyc.api.where.stopsforroute.*;
@@ -45,44 +47,58 @@ public class StopsForRouteProxy {
         });
     return Queries.RouteDirections.create(toRoute(route), directions);
   }
-//  public static List<Queries.RouteDirections> toRouteStopDirection(
-//      Location location,
-//      StopsForRouteRoot root) {
-//    List<StopGroup> groups = root.getData().getEntry().getStopGroupings().get(0).getStopGroups();
-//    List<Stop> stops = root.getData().getReferences().getStops();
-//
-//    Map<String, Stop> stopIdToStop = new HashMap<>();
-//    for (Stop s : stops) {
-//      stopIdToStop.put(s.getId(), s);
-//    }
-//
-//    Map<StopGroup, Stop> stopGroupToStop = new HashMap<>();
-//    for (StopGroup group : groups) {
-//      Stop closetStop = null;
-//      for (String stopId : group.getStopIds()) {
-//        Stop stop = stopIdToStop.get(stopId);
-//        if (closetStop == null ||
-//            Utils.distanceTo(location, stop.getLat(), stop.getLon()) <
-//                Utils.distanceTo(location, closetStop.getLat(), closetStop.getLon())) {
-//          closetStop = stop;
-//        }
-//      }
-//      stopGroupToStop.put(group, closetStop);
-//    }
-//
-//    List<Queries.RouteDirections> routeDirectionsList = new ArrayList<>();
-//    for (Map.Entry<StopGroup, Stop> entry : stopGroupToStop.entrySet()) {
-//      StopGroup group = entry.getKey();
-//      Stop stop = entry.getValue();
-////      Queries.RouteDirections routeDirections = Queries.RouteDirections.create(
-////          toRoute(route),
-////          toDirection(group));
-////      routeDirectionsList.add(routeDirections);
-//    }
-//    return routeDirectionsList;
-//  }
 
-  static Primitives.Route toRoute(Route r) {
+  public static Primitives.Stop toClosetStop(
+      Location location,
+      StopsForRouteRoot root,
+      final String directionId) {
+    List<StopGroup> stopGroups =  root
+        .getData()
+        .getEntry()
+        .getStopGroupings()
+        .get(0)
+        .getStopGroups();
+    List<Stop> stops = root.getData() .getReferences().getStops();
+
+    StopGroup stopGroup = Iterables.tryFind(stopGroups, new Predicate<StopGroup>() {
+      @Override
+      public boolean apply(StopGroup input) {
+        return input.getId().equals(directionId);
+      }
+    }).orNull();
+
+    Map<String, Stop> stopIdMap = new HashMap<>();
+    for (Stop stop : stops) {
+      stopIdMap.put(stop.getId(), stop);
+    }
+
+    Stop closetStop = null;
+    for (String id : stopGroup.getStopIds()) {
+      Stop stop = stopIdMap.get(id);
+      if (closetStop == null ||
+          Utils.distanceTo(location, closetStop.getLat(), closetStop.getLon()) >
+              Utils.distanceTo(location, stop.getLat(), stop.getLon())) {
+        closetStop = stop;
+      }
+    }
+
+    return toStop(closetStop);
+  }
+
+  public static Primitives.Route toRoute(final StopsForRouteRoot root) {
+    Optional<Route> route = tryFind(
+        root.getData().getReferences().getRoutes(),
+        new Predicate<Route>() {
+          @Override
+          public boolean apply(@Nullable Route input) {
+            return input.getId().equals(root.getData().getEntry().getRouteId());
+          }
+        });
+    assert route.isPresent();
+    return toRoute(route.orNull());
+  }
+
+  public static Primitives.Route toRoute(Route r) {
     return Primitives.Route.create(
         r.getColor(),
         r.getDescription(),
@@ -92,7 +108,7 @@ public class StopsForRouteProxy {
         r.getTextColor());
   }
 
-  static Primitives.Stop toStop(Stop s) {
+  public static Primitives.Stop toStop(Stop s) {
     return Primitives.Stop.create(
         s.getCode(),
         s.getDirection(),
@@ -102,7 +118,20 @@ public class StopsForRouteProxy {
         s.getName());
   }
 
-  static Primitives.Direction toDirection(StopGroup sg) {
+  public static Primitives.Direction toDirection(StopGroup sg) {
     return Primitives.Direction.create(sg.getId(), sg.getName().getName());
+  }
+
+  public static Primitives.Direction toDirection(StopsForRouteRoot root, final String directionId) {
+    Optional<StopGroup> stopGroup = tryFind(
+        root.getData().getEntry().getStopGroupings().get(0).getStopGroups(),
+        new Predicate<StopGroup>() {
+          @Override
+          public boolean apply(@Nullable StopGroup input) {
+            return input.getId().equals(directionId);
+          }
+        });
+    assert stopGroup.isPresent();
+    return toDirection(stopGroup.orNull());
   }
 }

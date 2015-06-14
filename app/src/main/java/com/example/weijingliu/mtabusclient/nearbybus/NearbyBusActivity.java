@@ -1,9 +1,7 @@
 package com.example.weijingliu.mtabusclient.nearbybus;
 
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -17,10 +15,13 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.weijingliu.mtabusclient.NextBusActivity;
+import com.example.weijingliu.mtabusclient.common.RecyclerViewDividerItemDecoration;
+import com.example.weijingliu.mtabusclient.nextbus.Config;
+import com.example.weijingliu.mtabusclient.nextbus.NextBusActivity;
 import com.example.weijingliu.mtabusclient.R;
 import com.obanyc.api.LocalService;
 import com.obanyc.api.ObaService;
+import com.obanyc.api.local.Primitives;
 import com.obanyc.api.local.Queries;
 import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
 
@@ -30,6 +31,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+
+import static com.example.weijingliu.mtabusclient.LocationUtils.pollLocation;
 
 public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAdapter.Listener {
   private static final String TAG = NearbyBusActivity.class.getSimpleName();
@@ -54,8 +57,7 @@ public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAda
   }
 
   private void testLocalService() {
-    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+    Location location = pollLocation(this);
     LocalService.instance.nearbyRouteDirections(location).toList()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<List<Queries.RouteDirections>>() {
@@ -106,7 +108,7 @@ public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAda
     mRecyclerView.setHasFixedSize(true);
     mRecyclerView.setLayoutManager(mLinearLayoutManager);
     mRecyclerView.setAdapter(mNearbyBusAdapter);
-    mRecyclerView.addItemDecoration(new NearbyBusAdapter.SimpleDividerItemDecoration());
+    mRecyclerView.addItemDecoration(new RecyclerViewDividerItemDecoration());
     mNearbyBusAdapter.setListener(this);
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -173,9 +175,15 @@ public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAda
   }
 
   @Override
-  public void onRouteSelected() {
-    Intent intent = new Intent();
-    intent.setClass(this, NextBusActivity.class);
-    startActivity(intent);
+  public void onDestinationClick(
+      Queries.RouteDirections routeDirections,
+      Primitives.Direction direction) {
+    {
+      Intent intent = new Intent();
+      intent.putExtra(Config.TAG, new Config(routeDirections.route().id(), direction.id()));
+      intent.setClass(this, NextBusActivity.class);
+      startActivity(intent);
+    }
+
   }
 }

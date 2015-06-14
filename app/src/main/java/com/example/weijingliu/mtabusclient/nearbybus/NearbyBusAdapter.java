@@ -16,8 +16,8 @@ import android.widget.TextView;
 import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.Utils;
 import com.obanyc.api.local.Primitives;
+import com.obanyc.api.local.Primitives.Direction;
 import com.obanyc.api.local.Primitives.Route;
-import com.obanyc.api.local.Queries;
 import com.obanyc.api.local.Queries.RouteDirections;
 
 import java.util.ArrayList;
@@ -46,18 +46,34 @@ public class NearbyBusAdapter extends RecyclerView.Adapter<NearbyBusAdapter.View
 
   @Override
   public void onBindViewHolder(ViewHolder viewHolder, int i) {
-    RouteDirections routeDirections = mRouteDirections.get(i);
+    final RouteDirections routeDirections = mRouteDirections.get(i);
     Route route = routeDirections.route();
-    Primitives.Direction direction1 = routeDirections.directions().get(0);
-    Primitives.Direction direction2 = routeDirections.directions().get(1);
+    final Direction direction1 = routeDirections.directions().get(0);
+    final Direction direction2 = routeDirections.directions().get(1);
 
     GradientDrawable gradientDrawable = new GradientDrawable();
     gradientDrawable.setColor(Color.parseColor("#" + route.color()));
     gradientDrawable.setCornerRadius(Utils.px(4));
+
     viewHolder.shortNameText.setText(route.shortName());
     viewHolder.shortNameText.setBackgroundDrawable(gradientDrawable);
     viewHolder.destinationText1.setText(direction1.destination());
     viewHolder.destinationText2.setText(direction2.destination());
+
+    viewHolder.destinationText1.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (mListener != null) {
+          mListener.onDestinationClick(routeDirections, direction1);
+        }
+      }});
+    viewHolder.destinationText2.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (mListener != null) {
+          mListener.onDestinationClick(routeDirections, direction2);
+        }
+      }});
   }
 
   @Override
@@ -75,7 +91,7 @@ public class NearbyBusAdapter extends RecyclerView.Adapter<NearbyBusAdapter.View
   }
 
   interface Listener {
-    void onRouteSelected();
+    void onDestinationClick(RouteDirections routeDirections, Direction direction);
   }
   private Listener mListener;
 
@@ -92,44 +108,6 @@ public class NearbyBusAdapter extends RecyclerView.Adapter<NearbyBusAdapter.View
       this.shortNameText = shortNameText;
       this.destinationText1 = destinationText1;
       this.destinationText2 = destinationText2;
-
-      view.setOnClickListener(
-          new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              if (mListener != null) {
-                mListener.onRouteSelected();
-              }
-            }
-          }
-      );
     }}
 
-  public static class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
-    private Drawable mDivider;
-
-    public SimpleDividerItemDecoration() {
-      mDivider = new ColorDrawable(Color.LTGRAY);
-    }
-
-    @Override
-    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-      final int dividerHeight = 1;
-      int left = parent.getPaddingLeft();
-      int right = parent.getWidth() - parent.getPaddingRight();
-
-      int childCount = parent.getChildCount();
-      for (int i = 0; i < childCount; i++) {
-        View child = parent.getChildAt(i);
-
-        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-        int top = child.getBottom() + params.bottomMargin;
-        int bottom = top + dividerHeight;
-
-        mDivider.setBounds(left, top, right, bottom);
-        mDivider.draw(c);
-      }
-    }
-  }
 }

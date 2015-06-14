@@ -1,10 +1,16 @@
 package com.obanyc.api;
 
 import android.location.Location;
-import android.util.Log;
 
-import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.base.Optional;
+import com.obanyc.api.local.Primitives;
+import com.obanyc.api.local.Primitives.Direction;
 import com.obanyc.api.local.Queries;
+import com.obanyc.api.local.Queries.RouteStopDirectionSchedules;
+import com.obanyc.api.local.ScheduleForStopProxy;
+import com.obanyc.api.local.StopsForLocationProxy;
+import com.obanyc.api.local.StopsForRouteProxy;
+import com.obanyc.api.where.scheduleforstop.ScheduleForStopRoot;
 import com.obanyc.api.where.stopsforlocation.Route;
 import com.obanyc.api.where.stopsforlocation.Stop;
 import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
@@ -13,11 +19,14 @@ import com.obanyc.api.where.stopsforroute.StopsForRouteRoot;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.jar.JarInputStream;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Func1;
 
+import static com.obanyc.api.local.StopsForRouteProxy.toClosetStop;
+import static com.obanyc.api.local.StopsForRouteProxy.toDirection;
+import static com.obanyc.api.local.StopsForRouteProxy.toRoute;
 import static com.obanyc.api.local.StopsForRouteProxy.toRouteDirections;
 
 public class LocalService {
@@ -63,5 +72,40 @@ public class LocalService {
           }
         });
     return routeStopDirection;
+  }
+
+  public Observable<RouteStopDirectionSchedules> routeStopDirectionSchedule(
+      final Location location,
+      final String routeId,
+      final String directionId) {
+    final Observable<StopsForRouteRoot> root = ObaService.getClient().getStopsForRoute(routeId);
+    final Observable<RouteStopDirectionSchedules> routeStopDirectionScheduleObservable =
+        root.flatMap(new Func1<StopsForRouteRoot, Observable<RouteStopDirectionSchedules>>() {
+          @Override
+          public Observable<RouteStopDirectionSchedules> call(StopsForRouteRoot stopsForRouteRoot) {
+            final Primitives.Route route = toRoute(stopsForRouteRoot);
+            final Primitives.Stop stop = toClosetStop(location, stopsForRouteRoot, directionId);
+            final Primitives.Direction direction = toDirection(stopsForRouteRoot, directionId);
+
+            Observable<ScheduleForStopRoot> scheduleForStopRoot =
+                ObaService.getClient().getScheduleForStop(stop.id());
+            return scheduleForStopRoot.map(
+                new Func1<ScheduleForStopRoot, RouteStopDirectionSchedules>() {
+                  @Override
+                  public RouteStopDirectionSchedules call(ScheduleForStopRoot scheduleForStopRoot) {
+                    Optional<List<Primitives.Schedule>> schedules = ScheduleForStopProxy
+                        .toSchedules(scheduleForStopRoot, routeId);
+
+                    return RouteStopDirectionSchedules.create(
+                        route,
+                        stop,
+                        direction,
+                        schedules.orNull());
+                  }
+                });
+          }
+        });
+
+    return routeStopDirectionScheduleObservable;
   }
 }

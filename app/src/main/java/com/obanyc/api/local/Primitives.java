@@ -57,4 +57,16 @@ public class Primitives {
       return new AutoValue_Primitives_Direction(id, destination);
     }
   }
+
+  @AutoValue
+  public abstract static class Schedule {
+    public abstract long arrivalTime();
+    public abstract long departureTime();
+
+    public static Schedule create(
+        long arrivalTime,
+        long departureTime) {
+      return new AutoValue_Primitives_Schedule(arrivalTime, departureTime);
+    }
+  }
 }

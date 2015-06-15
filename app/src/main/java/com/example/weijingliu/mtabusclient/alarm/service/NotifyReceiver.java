@@ -64,6 +64,13 @@ public class NotifyReceiver extends BroadcastReceiver {
     public Config() {
     }
 
+    public Config(String routeId, String routeName, String stopId, String stopName) {
+      this.routeId = routeId;
+      this.routeName = routeName;
+      this.stopId = stopId;
+      this.stopName = stopName;
+    }
+
     protected Config(Parcel in) {
       this.routeId = in.readString();
       this.routeName = in.readString();

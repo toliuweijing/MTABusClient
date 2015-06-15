@@ -1,5 +1,6 @@
 package com.example.weijingliu.mtabusclient.nextbus;
 
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,25 +10,16 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.weijingliu.mtabusclient.R;
+import com.example.weijingliu.mtabusclient.Utils;
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
-import com.obanyc.api.local.Primitives;
 import com.obanyc.api.local.Primitives.Schedule;
-import com.obanyc.api.local.Queries;
 import com.obanyc.api.local.Queries.RouteStopDirectionSchedules;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nullable;
-
-import autovalue.shaded.com.google.common.common.base.Function;
-import autovalue.shaded.com.google.common.common.base.Predicate;
-import autovalue.shaded.com.google.common.common.collect.Iterators;
-import autovalue.shaded.com.google.common.common.collect.Lists;
 
 import static com.example.weijingliu.mtabusclient.Utils.px;
 
@@ -56,8 +48,8 @@ public class NextBusAdapter extends RecyclerView.Adapter<NextBusAdapter.ViewHold
       layoutParams.height = px(100);
       viewHolder.frameLayout.setLayoutParams(layoutParams);
 
-    Date date = new Date(mSchedules.get(position).arrivalTime());
-    String dateString = new SimpleDateFormat("hh:mm a").format(date);
+    Schedule schedule = mSchedules.get(position);
+    String dateString = Utils.toTimeString(schedule);
       viewHolder.textView.setText(null);
       viewHolder.textView.setText(dateString);
       viewHolder.lolipopView.setAppearance(LolipopView.APPEARANCE_REGULAR);
@@ -87,6 +79,10 @@ public class NextBusAdapter extends RecyclerView.Adapter<NextBusAdapter.ViewHold
           }
         });
     notifyDataSetChanged();
+  }
+
+  public Schedule getNextSchedule() {
+    return mSchedules.isEmpty() ? null : mSchedules.get(0);
   }
 
   class ViewHolder extends RecyclerView.ViewHolder {

@@ -3,12 +3,12 @@
       tools:context=".NearbyActivity">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_1"
+            android:id="@+id/bus"
             android:checked="true"
             android:icon="@drawable/ic_directions_bus_black_48dp"
             android:title="Bus"/>
         <item
-            android:id="@+id/navigation_item_2"
+            android:id="@+id/alarm"
             android:icon="@drawable/ic_alarm_black_48dp"
             android:title="Alarm"/>
     </group>

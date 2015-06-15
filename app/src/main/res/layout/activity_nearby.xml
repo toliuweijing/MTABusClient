@@ -20,11 +20,12 @@
             style="@style/AppBar.DropShadow"
             />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:scrollbars="vertical"
+        <FrameLayout
+            android:id="@+id/fragment_holder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            />
+
     </LinearLayout>
 
     <android.support.design.widget.NavigationView

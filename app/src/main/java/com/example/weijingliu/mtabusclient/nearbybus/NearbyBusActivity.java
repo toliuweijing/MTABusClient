@@ -1,49 +1,33 @@
 package com.example.weijingliu.mtabusclient.nearbybus;
 
-import android.content.Intent;
-import android.location.Location;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.weijingliu.mtabusclient.common.RecyclerViewDividerItemDecoration;
-import com.example.weijingliu.mtabusclient.nextbus.Config;
-import com.example.weijingliu.mtabusclient.nextbus.NextBusActivity;
+import com.example.weijingliu.mtabusclient.alarm.AlarmViewerFragment;
 import com.example.weijingliu.mtabusclient.R;
-import com.obanyc.api.LocalService;
 import com.obanyc.api.ObaService;
-import com.obanyc.api.local.Primitives;
-import com.obanyc.api.local.Queries;
 import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
-
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 
-import static com.example.weijingliu.mtabusclient.LocationUtils.pollLocation;
-
-public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAdapter.Listener {
+public class NearbyBusActivity extends AppCompatActivity {
   private static final String TAG = NearbyBusActivity.class.getSimpleName();
 
   private DrawerLayout mDrawerLayout;
   private ActionBarDrawerToggle mActionBarDrawerToggle;
   private NavigationView mNavigationView;
   private Toolbar mToolbar;
-  private RecyclerView mRecyclerView;
-  private LinearLayoutManager mLinearLayoutManager;
-  private NearbyBusAdapter mNearbyBusAdapter;
+  private NearbyBusFragment mNearbyBusFragment;
+  private AlarmViewerFragment mAlarmViewerFragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,31 +35,7 @@ public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAda
     setContentView(R.layout.activity_nearby);
 
     init();
-//    testApi();
-//    testRetrofit();
-    testLocalService();
-  }
 
-  private void testLocalService() {
-    Location location = pollLocation(this);
-    LocalService.instance.nearbyRouteDirections(location).toList()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<List<Queries.RouteDirections>>() {
-          @Override
-          public void onCompleted() {
-
-          }
-
-          @Override
-          public void onError(Throwable e) {
-
-          }
-
-          @Override
-          public void onNext(List<Queries.RouteDirections> routeDirectionses) {
-            mNearbyBusAdapter.setRouteDirections(routeDirectionses);
-          }
-        });
   }
 
   private void init() {
@@ -88,9 +48,6 @@ public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAda
         R.drawable.ic_drawer);
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
-    mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-    mLinearLayoutManager = new LinearLayoutManager(this);
-    mNearbyBusAdapter = new NearbyBusAdapter();
 
     // config
     setSupportActionBar(mToolbar);
@@ -99,21 +56,55 @@ public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAda
           @Override
           public boolean onNavigationItemSelected(MenuItem menuItem) {
             Log.d("TAG", menuItem.getTitle() + " selected");
+            final int id = menuItem.getItemId();
+
+            if (id == R.id.bus) {
+              pushNearbyBusFragment();
+            }
+            if (id == R.id.alarm) {
+              pushAlarmViewerFragment();
+            }
+
             menuItem.setChecked(true);
+            mDrawerLayout.closeDrawers();
             return true;
           }
         });
     mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
-    mRecyclerView.setHasFixedSize(true);
-    mRecyclerView.setLayoutManager(mLinearLayoutManager);
-    mRecyclerView.setAdapter(mNearbyBusAdapter);
-    mRecyclerView.addItemDecoration(new RecyclerViewDividerItemDecoration());
-    mNearbyBusAdapter.setListener(this);
-
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
     getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+
+    pushNearbyBusFragment();
+  }
+
+  private void pushNearbyBusFragment() {
+    if (mNearbyBusFragment == null) {
+      mNearbyBusFragment = new NearbyBusFragment();
+    }
+
+    getSupportFragmentManager()
+        .beginTransaction()
+        .replace(
+            R.id.fragment_holder,
+            mNearbyBusFragment)
+        .commit();
+
+    getSupportActionBar().setTitle("Nearby Buses");
+  }
+
+  private void pushAlarmViewerFragment() {
+    if (mAlarmViewerFragment == null) {
+      mAlarmViewerFragment = new AlarmViewerFragment();
+    }
+    getSupportFragmentManager()
+        .beginTransaction()
+        .replace(R.id.fragment_holder,
+            mAlarmViewerFragment)
+        .commit();
+
+    getSupportActionBar().setTitle("Alarms");
   }
 
   private void testRetrofit() {
@@ -172,18 +163,5 @@ public class NearbyBusActivity extends AppCompatActivity implements NearbyBusAda
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  public void onDestinationClick(
-      Queries.RouteDirections routeDirections,
-      Primitives.Direction direction) {
-    {
-      Intent intent = new Intent();
-      intent.putExtra(Config.TAG, new Config(routeDirections.route().id(), direction.id()));
-      intent.setClass(this, NextBusActivity.class);
-      startActivity(intent);
-    }
-
   }
 }

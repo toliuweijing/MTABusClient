@@ -3,7 +3,6 @@ package com.example.weijingliu.mtabusclient.nearbybus;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,67 +15,84 @@ import com.example.weijingliu.mtabusclient.R;
 import com.obanyc.api.ObaService;
 import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
 
+import javax.annotation.Nullable;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
 public class NearbyBusActivity extends AppCompatActivity {
   private static final String TAG = NearbyBusActivity.class.getSimpleName();
 
+  private static final String CURRENT_DRAWER_ITEM_ID = "current_drawer_item_id";
+
   private DrawerLayout mDrawerLayout;
-  private ActionBarDrawerToggle mActionBarDrawerToggle;
   private NavigationView mNavigationView;
   private Toolbar mToolbar;
   private NearbyBusFragment mNearbyBusFragment;
   private AlarmViewerFragment mAlarmViewerFragment;
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_nearby);
 
-    init();
-
-  }
-
-  private void init() {
-    // instantiate
+    // ensure references
     mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-    mActionBarDrawerToggle = new ActionBarDrawerToggle(
-        this,
-        mDrawerLayout,
-        R.drawable.ic_drawer,
-        R.drawable.ic_drawer);
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-    // config
+    // configure
     setSupportActionBar(mToolbar);
     mNavigationView.setNavigationItemSelectedListener(
         new NavigationView.OnNavigationItemSelectedListener() {
           @Override
           public boolean onNavigationItemSelected(MenuItem menuItem) {
             Log.d("TAG", menuItem.getTitle() + " selected");
-            final int id = menuItem.getItemId();
-
-            if (id == R.id.bus) {
-              pushNearbyBusFragment();
-            }
-            if (id == R.id.alarm) {
-              pushAlarmViewerFragment();
-            }
-
-            menuItem.setChecked(true);
-            mDrawerLayout.closeDrawers();
+            setCurrentMenuItem(menuItem);
             return true;
           }
         });
-    mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
     getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
-    pushNearbyBusFragment();
+    int menuItemId = R.id.bus;
+    if (savedInstanceState != null) {
+      menuItemId = savedInstanceState.getInt(CURRENT_DRAWER_ITEM_ID, menuItemId);
+    }
+    MenuItem menuItem = mNavigationView.getMenu().findItem(menuItemId);
+    setCurrentMenuItem(menuItem);
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt(CURRENT_DRAWER_ITEM_ID, findCheckedMenuItem().getItemId());
+  }
+
+  private MenuItem findCheckedMenuItem() {
+    for (int i = 0 ; i < mNavigationView.getMenu().size(); ++i) {
+      MenuItem item = mNavigationView.getMenu().getItem(i);
+      if (item.isChecked()) {
+        return item;
+      }
+    }
+    throw new IllegalStateException("at least one item should be checked");
+  }
+
+  private void setCurrentMenuItem(MenuItem menuItem) {
+    final int id = menuItem.getItemId();
+
+    if (id == R.id.bus) {
+      pushNearbyBusFragment();
+    }
+    if (id == R.id.alarm) {
+      pushAlarmViewerFragment();
+    }
+
+    menuItem.setChecked(true);
+    mDrawerLayout.closeDrawers();
   }
 
   private void pushNearbyBusFragment() {

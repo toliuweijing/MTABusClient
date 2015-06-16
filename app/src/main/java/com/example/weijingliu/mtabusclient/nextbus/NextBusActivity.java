@@ -150,34 +150,61 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            Schedule schedule = mNextBusAdapter.getNextSchedule();
-            if (schedule == null) {
-              return;
-            }
-            Alarm alarm = Alarm.ofTime(
-                mRouteStopDirectionSchedules.route(),
-                mRouteStopDirectionSchedules.stop(),
-                schedule.arrivalTime());
-            AlarmStore.instance.add(alarm);
-
-            Snackbar
-                .make(
-                    mRootLayout,
-                    String.format(
-                        "An alarm is set at %s",
-                        Utils.toTimeString(schedule)),
-                    Snackbar.LENGTH_LONG)
-                .setAction("UNDO", new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                    Snackbar.make(mRootLayout, "Removed", Snackbar.LENGTH_SHORT).show();
-                  }
-                })
-                .show();
-
-            setupAlarmManager(mRouteStopDirectionSchedules, schedule.arrivalTime());
+            onNearAlarmSelected();
+//            onTimeAlarmSelected();
           }
         });
+  }
+
+  private void onNearAlarmSelected() {
+    int stopAway = 2;
+    Schedule schedule = mNextBusAdapter.getNextSchedule();
+    if (schedule == null) {
+      // No bus available today.
+      return;
+    }
+    Alarm alarm = Alarm.ofNear(
+        mRouteStopDirectionSchedules.route(),
+        mRouteStopDirectionSchedules.stop(),
+        stopAway);
+    AlarmStore.instance.add(alarm);
+
+    Snackbar
+        .make(
+            mRootLayout,
+            String.format(
+                "An alarm is set for the next approaching bus within %d stops",
+                stopAway),
+            Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  private void onTimeAlarmSelected() {
+    Schedule schedule = mNextBusAdapter.getNextSchedule();
+    if (schedule == null) {
+      return;
+    }
+    Alarm alarm = Alarm.ofTime(
+        mRouteStopDirectionSchedules.route(),
+        mRouteStopDirectionSchedules.stop(),
+        schedule.arrivalTime());
+    AlarmStore.instance.add(alarm);
+    setupAlarmManager(mRouteStopDirectionSchedules, schedule.arrivalTime());
+
+    Snackbar
+        .make(
+            mRootLayout,
+            String.format(
+                "An alarm is set at %s",
+                Utils.toTimeString(schedule)),
+            Snackbar.LENGTH_LONG)
+        .setAction("UNDO", new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Snackbar.make(mRootLayout, "Removed", Snackbar.LENGTH_SHORT).show();
+          }
+        })
+        .show();
   }
 
   private void setupAlarmManager(

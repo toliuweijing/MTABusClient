@@ -44,8 +44,8 @@ public class ObaService {
 
   public interface Client {
     @GET("/api/siri/stop-monitoring.json")
-    StopMonitoringRoot getStopMonitoring(
-        @Query("Key") String key,
+    Observable<StopMonitoringRoot> getStopMonitoring(
+        @Query("LineRef") String lineRef,
         @Query("MonitoringRef") String monitoringRef);
 
     @GET("/api/siri/stop-monitoring.json?key=cfb3c75b-5a43-4e66-b7f8-14e666b0c1c1&MonitoringRef=307200")

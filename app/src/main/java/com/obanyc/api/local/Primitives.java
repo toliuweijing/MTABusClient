@@ -69,4 +69,16 @@ public class Primitives {
       return new AutoValue_Primitives_Schedule(arrivalTime, departureTime);
     }
   }
+
+  @AutoValue
+  public abstract static class MonitoredCall {
+    public abstract int stopFromCall();
+    public abstract String presentableDistance();
+
+    public static MonitoredCall create(
+        int stopFromCall,
+        String presentableDistance) {
+      return new AutoValue_Primitives_MonitoredCall(stopFromCall, presentableDistance);
+    }
+  }
 }

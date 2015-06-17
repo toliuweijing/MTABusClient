@@ -20,6 +20,7 @@ import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.Utils;
 import com.example.weijingliu.mtabusclient.alarm.AlarmStore;
 import com.example.weijingliu.mtabusclient.alarm.Models.Alarm;
+import com.example.weijingliu.mtabusclient.alarm.service.NearAlarmService;
 import com.example.weijingliu.mtabusclient.alarm.service.NotifyReceiver;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -168,6 +169,9 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
         mRouteStopDirectionSchedules.stop(),
         stopAway);
     AlarmStore.instance.add(alarm);
+
+    Intent intent = new Intent(this, NearAlarmService.class);
+    startService(intent);
 
     Snackbar
         .make(

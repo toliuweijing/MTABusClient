@@ -22,6 +22,7 @@
         <activity android:name=".nextbus.NextBusActivity"/>
 
         <receiver android:name=".alarm.service.NotifyReceiver"/>
+        <service android:name=".alarm.service.NearAlarmService"/>
     </application>
 
     <uses-permission

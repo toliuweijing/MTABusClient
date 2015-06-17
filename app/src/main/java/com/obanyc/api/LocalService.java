@@ -8,8 +8,10 @@ import com.obanyc.api.local.Primitives.Direction;
 import com.obanyc.api.local.Queries;
 import com.obanyc.api.local.Queries.RouteStopDirectionSchedules;
 import com.obanyc.api.local.ScheduleForStopProxy;
+import com.obanyc.api.local.StopMonitoringProxy;
 import com.obanyc.api.local.StopsForLocationProxy;
 import com.obanyc.api.local.StopsForRouteProxy;
+import com.obanyc.api.siri.StopMonitoringRoot;
 import com.obanyc.api.where.scheduleforstop.ScheduleForStopRoot;
 import com.obanyc.api.where.stopsforlocation.Route;
 import com.obanyc.api.where.stopsforlocation.Stop;
@@ -107,5 +109,17 @@ public class LocalService {
         });
 
     return routeStopDirectionScheduleObservable;
+  }
+
+  public Observable<Primitives.MonitoredCall> stopMonitoredCall(
+      final String routeId,
+      final String stopId) {
+    return ObaService.getClient().getStopMonitoring(routeId, stopId)
+        .map(new Func1<StopMonitoringRoot, Primitives.MonitoredCall>() {
+          @Override
+          public Primitives.MonitoredCall call(StopMonitoringRoot stopMonitoringRoot) {
+            return StopMonitoringProxy.toClosetMonitoredCall(stopMonitoringRoot);
+          }
+        });
   }
 }

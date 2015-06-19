@@ -19,6 +19,12 @@ public class Models {
     public abstract long time();
     public abstract int nearCount();
 
+    public int id() {
+      int common = (route().id() + stop().id()).hashCode();
+      int other = type() == Type.TIME ? (int) time() : nearCount();
+      return common + other;
+    }
+
     public static Alarm ofTime(
         Route route,
         Stop stop,

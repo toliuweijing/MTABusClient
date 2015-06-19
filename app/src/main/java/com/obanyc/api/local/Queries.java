@@ -36,13 +36,20 @@ public class Queries {
     public abstract Stop stop();
     public abstract Direction direction();
     public abstract List<Schedule> schedules();
+    public abstract int stopIndex();
 
     public static RouteStopDirectionSchedules create(
         Route route,
         Stop stop,
         Direction direction,
-        List<Schedule> schedules) {
-      return new AutoValue_Queries_RouteStopDirectionSchedules(route, stop, direction, schedules);
+        List<Schedule> schedules,
+        int stopIndex) {
+      return new AutoValue_Queries_RouteStopDirectionSchedules(
+          route,
+          stop,
+          direction,
+          schedules,
+          stopIndex);
     }
   }
 }

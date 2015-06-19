@@ -20,6 +20,7 @@ import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.Utils;
 import com.example.weijingliu.mtabusclient.alarm.AlarmStore;
 import com.example.weijingliu.mtabusclient.alarm.Models.Alarm;
+import com.example.weijingliu.mtabusclient.alarm.service.NearAlarmService;
 import com.example.weijingliu.mtabusclient.alarm.service.NotifyReceiver;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -150,34 +151,68 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            Schedule schedule = mNextBusAdapter.getNextSchedule();
-            if (schedule == null) {
-              return;
+            Log.d("jing-stopIndex", String.valueOf(mRouteStopDirectionSchedules.stopIndex()));
+            if (mRouteStopDirectionSchedules.stopIndex() < 4) {
+              onTimeAlarmSelected();
+            } else {
+              onNearAlarmSelected();
             }
-            Alarm alarm = Alarm.ofTime(
-                mRouteStopDirectionSchedules.route(),
-                mRouteStopDirectionSchedules.stop(),
-                schedule.arrivalTime());
-            AlarmStore.instance.add(alarm);
-
-            Snackbar
-                .make(
-                    mRootLayout,
-                    String.format(
-                        "An alarm is set at %s",
-                        Utils.toTimeString(schedule)),
-                    Snackbar.LENGTH_LONG)
-                .setAction("UNDO", new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                    Snackbar.make(mRootLayout, "Removed", Snackbar.LENGTH_SHORT).show();
-                  }
-                })
-                .show();
-
-            setupAlarmManager(mRouteStopDirectionSchedules, schedule.arrivalTime());
           }
         });
+  }
+
+  private void onNearAlarmSelected() {
+    int stopAway = 2;
+    Schedule schedule = mNextBusAdapter.getNextSchedule();
+    if (schedule == null) {
+      // No bus available today.
+      return;
+    }
+    Alarm alarm = Alarm.ofNear(
+        mRouteStopDirectionSchedules.route(),
+        mRouteStopDirectionSchedules.stop(),
+        stopAway);
+    AlarmStore.instance.add(alarm);
+
+    Intent intent = new Intent(this, NearAlarmService.class);
+    startService(intent);
+
+    Snackbar
+        .make(
+            mRootLayout,
+            String.format(
+                "An alarm is set for the next approaching bus within %d stops",
+                stopAway),
+            Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  private void onTimeAlarmSelected() {
+    Schedule schedule = mNextBusAdapter.getNextSchedule();
+    if (schedule == null) {
+      return;
+    }
+    Alarm alarm = Alarm.ofTime(
+        mRouteStopDirectionSchedules.route(),
+        mRouteStopDirectionSchedules.stop(),
+        schedule.departureTime());
+    AlarmStore.instance.add(alarm);
+    setupAlarmManager(mRouteStopDirectionSchedules, schedule.departureTime());
+
+    Snackbar
+        .make(
+            mRootLayout,
+            String.format(
+                "An alarm is set at %s",
+                Utils.toTimeString(schedule.departureTime())),
+            Snackbar.LENGTH_LONG)
+        .setAction("UNDO", new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Snackbar.make(mRootLayout, "Removed", Snackbar.LENGTH_SHORT).show();
+          }
+        })
+        .show();
   }
 
   private void setupAlarmManager(

@@ -47,13 +47,15 @@ public class AlarmViewerAdapter extends RecyclerView.Adapter<AlarmViewerAdapter.
       holder.subtitle.setText("At " + alarm.stop().name());
       holder.subtitle2.setText(alarm.route().shortName());
     } else {
-      SpannableStringBuilder builder = SpannableStringBuilder.valueOf("2");
+      SpannableStringBuilder builder = SpannableStringBuilder.valueOf(
+          String.valueOf(
+              alarm.nearCount()));
       int start = builder.length();
       builder.append(" stops");
       builder.setSpan(new RelativeSizeSpan(0.5f), start, builder.length(), 0);
       holder.title.setText(builder);
-      holder.subtitle.setText("near Kings Plaza");
-      holder.subtitle2.setText("B64");
+      holder.subtitle.setText("near " + alarm.stop().name());
+      holder.subtitle2.setText(alarm.route().shortName());
     }
   }
 

@@ -8,8 +8,10 @@ import com.obanyc.api.local.Primitives.Direction;
 import com.obanyc.api.local.Queries;
 import com.obanyc.api.local.Queries.RouteStopDirectionSchedules;
 import com.obanyc.api.local.ScheduleForStopProxy;
+import com.obanyc.api.local.StopMonitoringProxy;
 import com.obanyc.api.local.StopsForLocationProxy;
 import com.obanyc.api.local.StopsForRouteProxy;
+import com.obanyc.api.siri.StopMonitoringRoot;
 import com.obanyc.api.where.scheduleforstop.ScheduleForStopRoot;
 import com.obanyc.api.where.stopsforlocation.Route;
 import com.obanyc.api.where.stopsforlocation.Stop;
@@ -24,6 +26,7 @@ import java.util.jar.JarInputStream;
 import rx.Observable;
 import rx.functions.Func1;
 
+import static com.obanyc.api.local.StopsForRouteProxy.findStopIndex;
 import static com.obanyc.api.local.StopsForRouteProxy.toClosetStop;
 import static com.obanyc.api.local.StopsForRouteProxy.toDirection;
 import static com.obanyc.api.local.StopsForRouteProxy.toRoute;
@@ -86,6 +89,7 @@ public class LocalService {
             final Primitives.Route route = toRoute(stopsForRouteRoot);
             final Primitives.Stop stop = toClosetStop(location, stopsForRouteRoot, directionId);
             final Primitives.Direction direction = toDirection(stopsForRouteRoot, directionId);
+            final int stopIndex = findStopIndex(direction.id(), stop.id(), stopsForRouteRoot);
 
             Observable<ScheduleForStopRoot> scheduleForStopRoot =
                 ObaService.getClient().getScheduleForStop(stop.id());
@@ -100,12 +104,25 @@ public class LocalService {
                         route,
                         stop,
                         direction,
-                        schedules.orNull());
+                        schedules.orNull(),
+                        stopIndex);
                   }
                 });
           }
         });
 
     return routeStopDirectionScheduleObservable;
+  }
+
+  public Observable<Primitives.MonitoredCall> stopMonitoredCall(
+      final String routeId,
+      final String stopId) {
+    return ObaService.getClient().getStopMonitoring(routeId, stopId)
+        .map(new Func1<StopMonitoringRoot, Primitives.MonitoredCall>() {
+          @Override
+          public Primitives.MonitoredCall call(StopMonitoringRoot stopMonitoringRoot) {
+            return StopMonitoringProxy.toClosetMonitoredCall(stopMonitoringRoot);
+          }
+        });
   }
 }

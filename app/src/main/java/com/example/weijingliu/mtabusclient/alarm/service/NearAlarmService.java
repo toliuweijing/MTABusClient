@@ -12,7 +12,6 @@ import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 
 import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.alarm.AlarmStore;
@@ -31,6 +30,7 @@ public class NearAlarmService extends Service {
   private Handler mHandler;
   private NotificationHelper mNotificationHelper;
   private NotificationManager mNotificationManager;
+  private boolean mForegrounded = false;
 
   @Override
   public void onCreate() {
@@ -49,15 +49,16 @@ public class NearAlarmService extends Service {
     Notification status(Alarm alarm, MonitoredCall monitoredCall, boolean finishing) {
       int defaults = Notification.DEFAULT_LIGHTS;
       int priority = NotificationCompat.PRIORITY_DEFAULT;
-      if (!finishing) {
+      if (finishing) {
         defaults = Notification.DEFAULT_ALL;
         priority = NotificationCompat.PRIORITY_HIGH;
       }
+
       return mBuilder
           .setSmallIcon(R.drawable.ic_directions_bus_black_48dp)
           .setLargeIcon(mBusBitmap)
           .setContentTitle(monitoredCall.presentableDistance())
-          .setContentText(alarm.stop().name())
+          .setContentText(alarm.route().shortName() + " - " + alarm.stop().name())
           .setAutoCancel(false)
           .setOngoing(finishing)
           .setDefaults(defaults)
@@ -104,7 +105,10 @@ public class NearAlarmService extends Service {
     }
 
     List<Alarm> alarms = AlarmStore.instance.getAll();
-    startForeground(-1, mNotificationHelper.initial());
+    if (!mForegrounded) {
+      mForegrounded = true;
+      startForeground(-1, mNotificationHelper.initial());
+    }
     for (Alarm alarm : alarms) {
       run(alarm);
     }
@@ -151,15 +155,15 @@ public class NearAlarmService extends Service {
 
             @Override
             public void onNext(MonitoredCall monitoredCall) {
-              boolean ongoing = true;
+              boolean finishing = false;
               if (monitoredCall.stopFromCall() <= alarm.nearCount()) {
                 AlarmStore.instance.remove(alarm);
-                ongoing = false;
+                finishing = true;
               }
               Notification notification = mNotificationHelper.status(
                   alarm,
                   monitoredCall,
-                  ongoing);
+                  finishing);
               mNotificationManager.notify(alarm.id(), notification);
 
               stopIfNeeded();

@@ -20,12 +20,16 @@ public class AlarmStore {
 
   private final List<Alarm> mAlarms = new ArrayList<>();
 
+  public void remove(Alarm alarm) {
+    mAlarms.remove(alarm);
+  }
+
   public void add(Alarm alarm) {
     mAlarms.add(alarm);
   }
 
   public List<Alarm> getAll() {
-    return mAlarms;
+    return new ArrayList<>(mAlarms);
   }
 
   public List<Alarm> getAll(final Alarm.Type type) {

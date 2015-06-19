@@ -1,5 +1,7 @@
 package com.example.weijingliu.mtabusclient.nearbybus;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -23,13 +25,21 @@ import retrofit.RetrofitError;
 public class NearbyBusActivity extends AppCompatActivity {
   private static final String TAG = NearbyBusActivity.class.getSimpleName();
 
-  private static final String CURRENT_DRAWER_ITEM_ID = "current_drawer_item_id";
+  private static final String DRAWER_ITEM_ID = "drawer_item_id";
 
   private DrawerLayout mDrawerLayout;
   private NavigationView mNavigationView;
   private Toolbar mToolbar;
   private NearbyBusFragment mNearbyBusFragment;
   private AlarmViewerFragment mAlarmViewerFragment;
+
+  public static class IntentFactory {
+    public static Intent alarmViewer(Context context) {
+      Intent i = new Intent(context, NearbyBusActivity.class);
+      i.putExtra(DRAWER_ITEM_ID, R.id.alarm);
+      return i;
+    }
+  }
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,8 +68,9 @@ public class NearbyBusActivity extends AppCompatActivity {
     getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
     int menuItemId = R.id.bus;
+    menuItemId = getIntent().getIntExtra(DRAWER_ITEM_ID, menuItemId);
     if (savedInstanceState != null) {
-      menuItemId = savedInstanceState.getInt(CURRENT_DRAWER_ITEM_ID, menuItemId);
+      menuItemId = savedInstanceState.getInt(DRAWER_ITEM_ID, menuItemId);
     }
     MenuItem menuItem = mNavigationView.getMenu().findItem(menuItemId);
     setCurrentMenuItem(menuItem);
@@ -68,7 +79,7 @@ public class NearbyBusActivity extends AppCompatActivity {
   @Override
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putInt(CURRENT_DRAWER_ITEM_ID, findCheckedMenuItem().getItemId());
+    outState.putInt(DRAWER_ITEM_ID, findCheckedMenuItem().getItemId());
   }
 
   private MenuItem findCheckedMenuItem() {

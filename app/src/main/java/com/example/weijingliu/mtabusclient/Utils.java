@@ -39,6 +39,6 @@ public class Utils {
 
   public static String toTimeString(long time) {
     Date date = new Date(time);
-    return new SimpleDateFormat("hh:mm a").format(date);
+    return new SimpleDateFormat("hh:mm:ss a").format(date);
   }
 }

@@ -48,6 +48,29 @@ public class StopsForRouteProxy {
     return Queries.RouteDirections.create(toRoute(route), directions);
   }
 
+  public static int findStopIndex(
+      final String directionId,
+      final String stopId,
+      StopsForRouteRoot root) {
+    StopGroup stopGroup = Iterables.find(
+        root.getData().getEntry().getStopGroupings().get(0).getStopGroups(),
+        new Predicate<StopGroup>() {
+          @Override
+          public boolean apply(StopGroup input) {
+            return input.getId().equals(directionId);
+          }
+        });
+
+    return Iterables.indexOf(
+        stopGroup.getStopIds(),
+        new Predicate<String>() {
+          @Override
+          public boolean apply(String input) {
+            return input.equals(stopId);
+          }
+        });
+  }
+
   public static Primitives.Stop toClosetStop(
       Location location,
       StopsForRouteRoot root,

@@ -151,8 +151,12 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            onNearAlarmSelected();
-//            onTimeAlarmSelected();
+            Log.d("jing-stopIndex", String.valueOf(mRouteStopDirectionSchedules.stopIndex()));
+            if (mRouteStopDirectionSchedules.stopIndex() < 4) {
+              onTimeAlarmSelected();
+            } else {
+              onNearAlarmSelected();
+            }
           }
         });
   }
@@ -191,16 +195,16 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
     Alarm alarm = Alarm.ofTime(
         mRouteStopDirectionSchedules.route(),
         mRouteStopDirectionSchedules.stop(),
-        schedule.arrivalTime());
+        schedule.departureTime());
     AlarmStore.instance.add(alarm);
-    setupAlarmManager(mRouteStopDirectionSchedules, schedule.arrivalTime());
+    setupAlarmManager(mRouteStopDirectionSchedules, schedule.departureTime());
 
     Snackbar
         .make(
             mRootLayout,
             String.format(
                 "An alarm is set at %s",
-                Utils.toTimeString(schedule)),
+                Utils.toTimeString(schedule.departureTime())),
             Snackbar.LENGTH_LONG)
         .setAction("UNDO", new View.OnClickListener() {
           @Override

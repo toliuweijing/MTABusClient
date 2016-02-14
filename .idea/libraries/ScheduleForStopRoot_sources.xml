@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ScheduleForStopRoot-sources">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/ScheduleForStopRoot-sources.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

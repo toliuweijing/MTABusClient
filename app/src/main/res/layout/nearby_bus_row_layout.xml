@@ -12,11 +12,15 @@
         android:layout_marginLeft="24dp"
         android:src="@drawable/ic_directions_bus_black_48dp"/>
 
+    <LinearLayout
+        android:layout_marginLeft="72dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
     <TextView
         android:id="@+id/bus_short_name_text"
-        android:layout_marginLeft="72dp"
         android:layout_marginTop="30dp"
-        android:layout_gravity="left|top"
         android:gravity="center"
         android:text="B9"
         android:textAppearance="@android:style/TextAppearance.Medium"
@@ -28,23 +32,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <TextView
+    <Button
         android:id="@+id/bus_destination_text_1"
-        android:layout_marginLeft="72dp"
-        android:textAppearance="@android:style/TextAppearance.Small"
         android:textStyle="bold"
-        android:layout_gravity="left|center_vertical"
         android:text="Coney Island Stillwell AV"
+        android:padding="10dp"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <TextView
+    <Button
         android:id="@+id/bus_destination_text_2"
-        android:layout_marginLeft="72dp"
-        android:layout_marginBottom="60dp"
-        android:layout_gravity="left|bottom"
+        android:padding="10dp"
         android:textStyle="bold"
         android:text="Kings Plaza via 60 ST via AVENUE M"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
 </FrameLayout>

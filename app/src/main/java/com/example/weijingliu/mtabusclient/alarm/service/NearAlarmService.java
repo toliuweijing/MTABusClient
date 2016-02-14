@@ -44,7 +44,7 @@ public class NearAlarmService extends Service {
     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(NearAlarmService.this);
     Bitmap mBusBitmap = BitmapFactory.decodeResource(
         getResources(),
-        R.drawable.ic_directions_bus_black_48dp);
+        R.drawable.ic_launcher);
 
     Notification status(Alarm alarm, MonitoredCall monitoredCall, boolean finishing) {
       int defaults = Notification.DEFAULT_LIGHTS;

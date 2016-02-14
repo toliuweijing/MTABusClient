@@ -46,10 +46,11 @@ public class NearAlarmService extends Service {
         getResources(),
         R.drawable.ic_launcher);
 
-    Notification status(Alarm alarm, MonitoredCall monitoredCall, boolean finishing) {
+    Notification status(Alarm alarm, MonitoredCall monitoredCall, boolean ongoing) {
+      ongoing = false;
       int defaults = Notification.DEFAULT_LIGHTS;
       int priority = NotificationCompat.PRIORITY_DEFAULT;
-      if (finishing) {
+      if (ongoing) {
         defaults = Notification.DEFAULT_ALL;
         priority = NotificationCompat.PRIORITY_HIGH;
       }
@@ -60,7 +61,7 @@ public class NearAlarmService extends Service {
           .setContentTitle(monitoredCall.presentableDistance())
           .setContentText(alarm.route().shortName() + " - " + alarm.stop().name())
           .setAutoCancel(false)
-          .setOngoing(finishing)
+          .setOngoing(ongoing)
           .setDefaults(defaults)
           .setWhen(System.currentTimeMillis())
           .setPriority(priority)
@@ -163,7 +164,7 @@ public class NearAlarmService extends Service {
               Notification notification = mNotificationHelper.status(
                   alarm,
                   monitoredCall,
-                  finishing);
+                  !finishing);
               mNotificationManager.notify(alarm.id(), notification);
 
               stopIfNeeded();

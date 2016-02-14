@@ -1,11 +1,13 @@
 package com.example.weijingliu.mtabusclient.alarm;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.weijingliu.mtabusclient.R;
@@ -27,16 +29,18 @@ public class AlarmViewerAdapter extends RecyclerView.Adapter<AlarmViewerAdapter.
     TextView title = (TextView) item.findViewById(R.id.title_text);
     TextView subtitle = (TextView) item.findViewById(R.id.subtitle_text_1);
     TextView subtitle2 = (TextView) item.findViewById(R.id.subtitle_text_2);
+    SwitchCompat switchCompat = (SwitchCompat) item.findViewById(R.id.on_off_switch);
     return new ViewHolder(
         item,
         title,
         subtitle,
-        subtitle2);
+        subtitle2,
+        switchCompat);
   }
 
   @Override
-  public void onBindViewHolder(ViewHolder holder, int position) {
-    Alarm alarm = mAlarms.get(position);
+  public void onBindViewHolder(ViewHolder holder, final int position) {
+    final Alarm alarm = mAlarms.get(position);
     if (alarm.type() == Alarm.Type.TIME) {
       String timeString = Utils.toTimeString(alarm.time());
       SpannableStringBuilder builder = SpannableStringBuilder.valueOf(timeString);
@@ -57,6 +61,18 @@ public class AlarmViewerAdapter extends RecyclerView.Adapter<AlarmViewerAdapter.
       holder.subtitle.setText("near " + alarm.stop().name());
       holder.subtitle2.setText(alarm.route().shortName());
     }
+    holder.switchCompat.setOnCheckedChangeListener(null);
+    holder.switchCompat.setChecked(true);
+    holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (!isChecked) {
+          notifyItemRemoved(position);
+          mAlarms.remove(position);
+          AlarmStore.instance.remove(alarm);
+        }
+      }
+    });
   }
 
   @Override
@@ -73,11 +89,13 @@ public class AlarmViewerAdapter extends RecyclerView.Adapter<AlarmViewerAdapter.
     final TextView title;
     final TextView subtitle;
     final TextView subtitle2;
-    public ViewHolder(View itemView, TextView title, TextView subtitle, TextView subtitle2) {
+    final SwitchCompat switchCompat;
+    public ViewHolder(View itemView, TextView title, TextView subtitle, TextView subtitle2, SwitchCompat switchCompat) {
       super(itemView);
       this.title = title;
       this.subtitle = subtitle;
       this.subtitle2 = subtitle2;
+      this.switchCompat = switchCompat;
     }
   }
 }

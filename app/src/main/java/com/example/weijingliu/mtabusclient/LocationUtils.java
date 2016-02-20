@@ -1,7 +1,6 @@
 package com.example.weijingliu.mtabusclient;
 
 import android.content.Context;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,18 +12,21 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 
 public class LocationUtils {
-  public static Location pollLocation(Context context) {
+
+//    public static final String LOCATION_PROVIDER = LocationManager.NETWORK_PROVIDER;
+    public static final String LOCATION_PROVIDER = LocationManager.GPS_PROVIDER;
+
+    public static Location pollLocation(Context context) {
     LocationManager locationManager = (LocationManager) context.getSystemService(
         Context.LOCATION_SERVICE);
-    Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+    Location location = locationManager.getLastKnownLocation(LOCATION_PROVIDER);
     return location;
   }
 
   public static boolean isLocationSettingsEnabled(Context context) {
     LocationManager locationManager = (LocationManager) context.getSystemService(
             Context.LOCATION_SERVICE);
-    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
-            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    return locationManager.isProviderEnabled(LOCATION_PROVIDER);
   }
 
   public static ListenableFuture<Location> pollAccurateLocation(Context context) {
@@ -38,7 +40,7 @@ public class LocationUtils {
               Context.LOCATION_SERVICE);
 
       locationManager.requestSingleUpdate(
-              LocationManager.NETWORK_PROVIDER,
+              LOCATION_PROVIDER,
               new LocationListener() {
                   @Override
                   public void onLocationChanged(Location location) {

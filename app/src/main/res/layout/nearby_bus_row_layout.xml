@@ -34,6 +34,7 @@
 
     <Button
         android:id="@+id/bus_destination_text_1"
+        android:gravity="left"
         android:textStyle="bold"
         android:text="Coney Island Stillwell AV"
         android:padding="10dp"
@@ -44,6 +45,7 @@
     <Button
         android:id="@+id/bus_destination_text_2"
         android:padding="10dp"
+        android:gravity="left"
         android:textStyle="bold"
         android:text="Kings Plaza via 60 ST via AVENUE M"
         android:layout_width="wrap_content"

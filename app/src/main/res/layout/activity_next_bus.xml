@@ -44,6 +44,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_alarm_add_white_48dp"
         app:fabSize="normal"
+        app:borderWidth="0dp"
         />
 
 </FrameLayout>

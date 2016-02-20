@@ -16,8 +16,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
+        android:src="@drawable/ic_location_on_white_24dp"
         app:fabSize="normal"
-        android:src="@drawable/ic_location_on_white_24dp" />
+        app:borderWidth="0dp"
+        />
 
 </FrameLayout>
 

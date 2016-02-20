@@ -67,8 +67,9 @@ public class AlarmViewerAdapter extends RecyclerView.Adapter<AlarmViewerAdapter.
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (!isChecked) {
-          notifyItemRemoved(holder.getAdapterPosition());
-          mAlarms.remove(holder.getAdapterPosition());
+          int toRemovePosition = holder.getAdapterPosition();
+          notifyItemRemoved(toRemovePosition);
+          mAlarms.remove(toRemovePosition);
           AlarmUtil.dismissAlarm(alarm, holder.itemView.getContext());
         }
       }

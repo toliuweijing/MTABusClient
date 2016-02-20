@@ -25,6 +25,11 @@ public class AlarmStore {
   }
 
   public void add(Alarm alarm) {
+    for (Alarm a : mAlarms) {
+      if (a.id() == alarm.id()) {
+        return;
+      }
+    }
     mAlarms.add(alarm);
   }
 

@@ -39,7 +39,7 @@ public class AlarmViewerAdapter extends RecyclerView.Adapter<AlarmViewerAdapter.
   }
 
   @Override
-  public void onBindViewHolder(ViewHolder holder, final int position) {
+  public void onBindViewHolder(final ViewHolder holder, final int position) {
     final Alarm alarm = mAlarms.get(position);
     if (alarm.type() == Alarm.Type.TIME) {
       String timeString = Utils.toTimeString(alarm.time());
@@ -67,9 +67,9 @@ public class AlarmViewerAdapter extends RecyclerView.Adapter<AlarmViewerAdapter.
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (!isChecked) {
-          notifyItemRemoved(position);
-          mAlarms.remove(position);
-          AlarmStore.instance.remove(alarm);
+          notifyItemRemoved(holder.getAdapterPosition());
+          mAlarms.remove(holder.getAdapterPosition());
+          AlarmUtil.dismissAlarm(alarm, holder.itemView.getContext());
         }
       }
     });

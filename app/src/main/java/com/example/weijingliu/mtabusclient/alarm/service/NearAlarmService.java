@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +32,11 @@ public class NearAlarmService extends Service {
   private NotificationHelper mNotificationHelper;
   private NotificationManager mNotificationManager;
   private boolean mForegrounded = false;
+
+  public static void refreshService(Context context) {
+    Intent intent = new Intent(context, NearAlarmService.class);
+    context.startService(intent);
+  }
 
   @Override
   public void onCreate() {

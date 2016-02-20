@@ -174,8 +174,7 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
         stopAway);
     AlarmStore.instance.add(alarm);
 
-    Intent intent = new Intent(this, NearAlarmService.class);
-    startService(intent);
+    NearAlarmService.refreshService(this);
 
     Snackbar
         .make(

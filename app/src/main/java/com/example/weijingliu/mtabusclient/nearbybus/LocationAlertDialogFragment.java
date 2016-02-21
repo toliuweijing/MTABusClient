@@ -11,7 +11,7 @@ import com.example.weijingliu.mtabusclient.LocationUtil;
 
 public class LocationAlertDialogFragment extends DialogFragment {
 
-  public static final String MESSAGE = "Please enable system location settings and click location pin.";
+  private static final String MESSAGE = "Please enable system location settings and click location pin.";
   private LocationUtil mLocationUtil;
 
   @Override

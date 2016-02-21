@@ -11,7 +11,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 
-public class LocationUtils {
+public class LocationUtil {
 
   private static final String LOCATION_PROVIDER =
       BuildConfig.DEBUG ?
@@ -20,15 +20,14 @@ public class LocationUtils {
 
   private final Context mContext;
 
-  public LocationUtils(Context context) {
+  public LocationUtil(Context context) {
     mContext = context;
   }
 
   public Location pollLocation() {
     LocationManager locationManager = (LocationManager) mContext.getSystemService(
         Context.LOCATION_SERVICE);
-    Location location = locationManager.getLastKnownLocation(LOCATION_PROVIDER);
-    return location;
+    return locationManager.getLastKnownLocation(LOCATION_PROVIDER);
   }
 
   public boolean isLocationSettingsEnabled() {

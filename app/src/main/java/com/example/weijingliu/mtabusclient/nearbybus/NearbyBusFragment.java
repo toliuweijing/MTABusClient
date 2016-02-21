@@ -5,7 +5,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.weijingliu.mtabusclient.LocationUtils;
+import com.example.weijingliu.mtabusclient.LocationUtil;
 import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.common.HorizontalDividerItemDecoration;
 import com.example.weijingliu.mtabusclient.nextbus.Config;
@@ -35,13 +34,13 @@ public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.List
   private NearbyBusAdapter mNearbyBusAdapter;
   private LinearLayoutManager mLinearLayoutManager;
   private FloatingActionButton mFab;
-  private LocationUtils mLocationUtils;
+  private LocationUtil mLocationUtil;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    mLocationUtils = new LocationUtils(getActivity());
+    mLocationUtil = new LocationUtil(getActivity());
     testLocalService();
   }
 
@@ -79,7 +78,7 @@ public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.List
 
     maybeAlertLocationSettings();
     Futures.addCallback(
-        mLocationUtils.pollAccurateLocation(),
+        mLocationUtil.pollAccurateLocation(),
         new FutureCallback<Location>() {
           @Override
           public void onSuccess(Location result) {
@@ -108,12 +107,12 @@ public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.List
 
   private void testLocalService() {
     maybeAlertLocationSettings();
-    Location location = mLocationUtils.pollLocation();
+    Location location = mLocationUtil.pollLocation();
     fetchWithLocation(location);
   }
 
   private void maybeAlertLocationSettings() {
-    if (!mLocationUtils.isLocationSettingsEnabled()) {
+    if (!mLocationUtil.isLocationSettingsEnabled()) {
       new LocationAlertDialogFragment().show(getFragmentManager(), "");
     }
   }

@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.example.weijingliu.mtabusclient.LocationUtils;
+import com.example.weijingliu.mtabusclient.LocationUtil;
 import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.Utils;
 import com.example.weijingliu.mtabusclient.alarm.AlarmStore;
@@ -50,14 +50,14 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
   private Config mConfig;
   private MapFragment mMapFragment;
   private RouteStopDirectionSchedules mRouteStopDirectionSchedules;
-  private LocationUtils mLocationUtils;
+  private LocationUtil mLocationUtil;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_next_bus);
 
-    mLocationUtils = new LocationUtils(this);
+    mLocationUtil = new LocationUtil(this);
     init();
     testApi();
   }
@@ -66,7 +66,7 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
     Log.d("jing", mConfig.toString());
 
     LocalService.instance.routeStopDirectionSchedule(
-        mLocationUtils.pollLocation(),
+        mLocationUtil.pollLocation(),
         mConfig.getRouteId(),
         mConfig.getDirectionId())
         .observeOn(AndroidSchedulers.mainThread())

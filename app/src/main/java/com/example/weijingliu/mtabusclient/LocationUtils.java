@@ -13,8 +13,10 @@ import com.google.common.util.concurrent.SettableFuture;
 
 public class LocationUtils {
 
-//    public static final String LOCATION_PROVIDER = LocationManager.NETWORK_PROVIDER;
-    public static final String LOCATION_PROVIDER = LocationManager.GPS_PROVIDER;
+    public static final String LOCATION_PROVIDER =
+        BuildConfig.DEBUG ?
+            LocationManager.GPS_PROVIDER :
+            LocationManager.NETWORK_PROVIDER;
 
     public static Location pollLocation(Context context) {
     LocationManager locationManager = (LocationManager) context.getSystemService(

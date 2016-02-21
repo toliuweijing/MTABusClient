@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.weijingliu.mtabusclient.LocationUtils;
 import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.Utils;
 import com.example.weijingliu.mtabusclient.alarm.AlarmStore;
@@ -38,8 +39,6 @@ import com.obanyc.api.local.Queries.RouteStopDirectionSchedules;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
-import static com.example.weijingliu.mtabusclient.LocationUtils.pollLocation;
-
 public class NextBusActivity extends AppCompatActivity implements OnMapReadyCallback {
   //TODO
   private NextBusAdapter mNextBusAdapter;
@@ -51,12 +50,14 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
   private Config mConfig;
   private MapFragment mMapFragment;
   private RouteStopDirectionSchedules mRouteStopDirectionSchedules;
+  private LocationUtils mLocationUtils;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_next_bus);
 
+    mLocationUtils = new LocationUtils(this);
     init();
     testApi();
   }
@@ -65,7 +66,7 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
     Log.d("jing", mConfig.toString());
 
     LocalService.instance.routeStopDirectionSchedule(
-        pollLocation(this),
+        mLocationUtils.pollLocation(),
         mConfig.getRouteId(),
         mConfig.getDirectionId())
         .observeOn(AndroidSchedulers.mainThread())

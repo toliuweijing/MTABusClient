@@ -30,18 +30,18 @@ import java.util.List;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
-import static com.example.weijingliu.mtabusclient.LocationUtils.pollLocation;
-
 public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.Listener {
   private RecyclerView mRecyclerView;
   private NearbyBusAdapter mNearbyBusAdapter;
   private LinearLayoutManager mLinearLayoutManager;
   private FloatingActionButton mFab;
+  private LocationUtils mLocationUtils;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    mLocationUtils = new LocationUtils(getActivity());
     testLocalService();
   }
 
@@ -77,9 +77,9 @@ public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.List
   private void onFloatingActionButtonClicked() {
     showEmptyList();
 
-    LocationAlertDialogFragment.maybeAlertForEnablingLocation(NearbyBusFragment.this);
+    maybeAlertLocationSettings();
     Futures.addCallback(
-        LocationUtils.pollAccurateLocation(getActivity()),
+        mLocationUtils.pollAccurateLocation(),
         new FutureCallback<Location>() {
           @Override
           public void onSuccess(Location result) {
@@ -107,9 +107,15 @@ public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.List
   }
 
   private void testLocalService() {
-    LocationAlertDialogFragment.maybeAlertForEnablingLocation(this);
-    Location location = pollLocation(getActivity());
+    maybeAlertLocationSettings();
+    Location location = mLocationUtils.pollLocation();
     fetchWithLocation(location);
+  }
+
+  private void maybeAlertLocationSettings() {
+    if (!mLocationUtils.isLocationSettingsEnabled()) {
+      new LocationAlertDialogFragment().show(getFragmentManager(), "");
+    }
   }
 
   private void fetchWithLocation(Location location) {

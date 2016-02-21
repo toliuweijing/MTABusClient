@@ -13,58 +13,64 @@ import com.google.common.util.concurrent.SettableFuture;
 
 public class LocationUtils {
 
-    public static final String LOCATION_PROVIDER =
-        BuildConfig.DEBUG ?
-            LocationManager.GPS_PROVIDER :
-            LocationManager.NETWORK_PROVIDER;
+  private static final String LOCATION_PROVIDER =
+      BuildConfig.DEBUG ?
+          LocationManager.GPS_PROVIDER :
+          LocationManager.NETWORK_PROVIDER;
 
-    public static Location pollLocation(Context context) {
-    LocationManager locationManager = (LocationManager) context.getSystemService(
+  private final Context mContext;
+
+  public LocationUtils(Context context) {
+    mContext = context;
+  }
+
+  public Location pollLocation() {
+    LocationManager locationManager = (LocationManager) mContext.getSystemService(
         Context.LOCATION_SERVICE);
     Location location = locationManager.getLastKnownLocation(LOCATION_PROVIDER);
     return location;
   }
 
-  public static boolean isLocationSettingsEnabled(Context context) {
-    LocationManager locationManager = (LocationManager) context.getSystemService(
-            Context.LOCATION_SERVICE);
+  public boolean isLocationSettingsEnabled() {
+    LocationManager locationManager = (LocationManager) mContext.getSystemService(
+        Context.LOCATION_SERVICE);
     return locationManager.isProviderEnabled(LOCATION_PROVIDER);
   }
 
-  public static ListenableFuture<Location> pollAccurateLocation(Context context) {
-      if (!isLocationSettingsEnabled(context)) {
-          return Futures.immediateFailedFuture(new Throwable("no location enabled"));
-      }
+  public ListenableFuture<Location> pollAccurateLocation() {
+    if (!isLocationSettingsEnabled()) {
+      return Futures.immediateFailedFuture(new Throwable("no location enabled"));
+    }
 
-      final SettableFuture<Location> future = SettableFuture.create();
+    final SettableFuture<Location> future = SettableFuture.create();
 
-      LocationManager locationManager = (LocationManager) context.getSystemService(
-              Context.LOCATION_SERVICE);
+    LocationManager locationManager = (LocationManager) mContext.getSystemService(
+        Context.LOCATION_SERVICE);
 
-      locationManager.requestSingleUpdate(
-              LOCATION_PROVIDER,
-              new LocationListener() {
-                  @Override
-                  public void onLocationChanged(Location location) {
-                    future.set(location);
-                  }
+    locationManager.requestSingleUpdate(
+        LOCATION_PROVIDER,
+        new LocationListener() {
+          @Override
+          public void onLocationChanged(Location location) {
+            future.set(location);
+          }
 
-                  @Override
-                  public void onStatusChanged(String provider, int status, Bundle extras) {
-                  }
+          @Override
+          public void onStatusChanged(String provider, int status, Bundle extras) {
+          }
 
-                  @Override
-                  public void onProviderEnabled(String provider) {
+          @Override
+          public void onProviderEnabled(String provider) {
 
-                  }
+          }
 
-                  @Override
-                  public void onProviderDisabled(String provider) {
+          @Override
+          public void onProviderDisabled(String provider) {
 
-                  }
-              },
-              Looper.getMainLooper());
-      return future;
+          }
+        },
+        Looper.getMainLooper());
+    return future;
   }
 
 }

@@ -12,35 +12,27 @@ import android.support.v7.app.AlertDialog;
 
 import com.example.weijingliu.mtabusclient.LocationUtils;
 
-/**
- * Created by weijingliu on 2/14/16.
- */
 public class LocationAlertDialogFragment extends DialogFragment {
 
-    private String mMessage;
+  public static final String MESSAGE = "Please enable system location settings and click location pin.";
+  private LocationUtils mLocationUtils;
 
-    public static LocationAlertDialogFragment newInstance(String message) {
-        LocationAlertDialogFragment fragment = new LocationAlertDialogFragment();
-        fragment.mMessage = message;
-        return fragment;
-    }
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-    public static void maybeAlertForEnablingLocation(Fragment fragment) {
-        if (!LocationUtils.isLocationSettingsEnabled(fragment.getActivity())) {
-            newInstance("Please enable system location settings and click location pin.")
-                    .show(fragment.getFragmentManager(), "1");
-        }
-    }
+    mLocationUtils = new LocationUtils(getActivity());
+  }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(mMessage)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        return builder.create();
-    }
+  @NonNull
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    builder.setMessage(MESSAGE)
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+          }
+        });
+    return builder.create();
+  }
 }

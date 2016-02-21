@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.Utils;
@@ -151,14 +152,25 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            Log.d("jing-stopIndex", String.valueOf(mRouteStopDirectionSchedules.stopIndex()));
-            if (mRouteStopDirectionSchedules.stopIndex() < 4) {
-              onTimeAlarmSelected();
-            } else {
-              onNearAlarmSelected();
-            }
+            onFloatingActionButtonClicked();
           }
         });
+  }
+
+  private void onFloatingActionButtonClicked() {
+    if (mRouteStopDirectionSchedules == null) {
+      Toast
+          .makeText(this, "Something went wrong. Try again later", Toast.LENGTH_LONG)
+          .show();
+      return;
+    }
+
+    Log.d("jing-stopIndex", String.valueOf(mRouteStopDirectionSchedules.stopIndex()));
+    if (mRouteStopDirectionSchedules.stopIndex() < 4) {
+      onTimeAlarmSelected();
+    } else {
+      onNearAlarmSelected();
+    }
   }
 
   private void onNearAlarmSelected() {

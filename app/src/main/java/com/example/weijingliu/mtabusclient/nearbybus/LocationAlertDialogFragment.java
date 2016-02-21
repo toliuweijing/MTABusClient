@@ -7,19 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import com.example.weijingliu.mtabusclient.LocationUtil;
-
 public class LocationAlertDialogFragment extends DialogFragment {
 
-  private static final String MESSAGE = "Please enable system location settings and click location pin.";
-  private LocationUtil mLocationUtil;
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    mLocationUtil = new LocationUtil(getActivity());
-  }
+  private static final String MESSAGE =
+      "Please enable system location settings and click location pin.";
 
   @NonNull
   @Override

@@ -24,6 +24,7 @@ import com.obanyc.api.LocalService;
 import com.obanyc.api.local.Primitives;
 import com.obanyc.api.local.Queries;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
@@ -68,23 +69,32 @@ public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.List
     mFab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        LocationAlertDialogFragment.maybeAlertForEnablingLocation(NearbyBusFragment.this);
-        Futures.addCallback(
-                LocationUtils.pollAccurateLocation(getActivity()),
-                new FutureCallback<Location>() {
-                  @Override
-                  public void onSuccess(Location result) {
-                    fetchWithLocation(result);
-                  }
-
-                  @Override
-                  public void onFailure(Throwable t) {
-
-                  }
-                }
-        );
+        onFloatingActionButtonClicked();
       }
     });
+  }
+
+  private void onFloatingActionButtonClicked() {
+    showEmptyList();
+
+    LocationAlertDialogFragment.maybeAlertForEnablingLocation(NearbyBusFragment.this);
+    Futures.addCallback(
+        LocationUtils.pollAccurateLocation(getActivity()),
+        new FutureCallback<Location>() {
+          @Override
+          public void onSuccess(Location result) {
+            fetchWithLocation(result);
+          }
+
+          @Override
+          public void onFailure(Throwable t) {
+          }
+        }
+    );
+  }
+
+  private void showEmptyList() {
+    mNearbyBusAdapter.setRouteDirections(new ArrayList<Queries.RouteDirections>());
   }
 
   @Override

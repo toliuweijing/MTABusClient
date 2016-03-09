@@ -2,6 +2,7 @@ package com.example.weijingliu.mtabusclient.nearbybus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -96,13 +97,23 @@ public class NearbyBusActivity extends AppCompatActivity {
 
     if (id == R.id.bus) {
       pushNearbyBusFragment();
+      menuItem.setChecked(true);
     }
     if (id == R.id.alarm) {
       pushAlarmViewerFragment();
+      menuItem.setChecked(true);
+    }
+    if (id == R.id.contact_me) {
+      handleContactMe();
     }
 
-    menuItem.setChecked(true);
     mDrawerLayout.closeDrawers();
+  }
+
+  private void handleContactMe() {
+    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://fb.me/msg/busggg"));
+    Intent chooser = Intent.createChooser(i, "Choose your browser");
+    startActivity(chooser);
   }
 
   private void pushNearbyBusFragment() {

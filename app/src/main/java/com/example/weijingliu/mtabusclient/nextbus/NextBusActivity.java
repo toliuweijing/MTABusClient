@@ -167,11 +167,7 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     Log.d("jing-stopIndex", String.valueOf(mRouteStopDirectionSchedules.stopIndex()));
-    if (mRouteStopDirectionSchedules.stopIndex() < 4) {
-      onTimeAlarmSelected();
-    } else {
-      onNearAlarmSelected();
-    }
+    onNearAlarmSelected();
   }
 
   private void onNearAlarmSelected() {

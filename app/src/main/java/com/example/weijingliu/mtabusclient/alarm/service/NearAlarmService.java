@@ -21,6 +21,8 @@ import com.example.weijingliu.mtabusclient.nearbybus.NearbyBusActivity;
 import com.obanyc.api.LocalService;
 import com.obanyc.api.local.Primitives.MonitoredCall;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import rx.Subscriber;
@@ -209,11 +211,13 @@ public class NearAlarmService extends Service {
       }
 
       NotificationCompat.Builder builder = new NotificationCompat.Builder(NearAlarmService.this);
+      String scheduledTime = new SimpleDateFormat("h:mm a").format(new Date(alarm.time()));
+
       return builder
           .setSmallIcon(R.drawable.ic_directions_bus_black_48dp)
           .setLargeIcon(mBusBitmap)
-          .setContentTitle(monitoredCall.presentableDistance())
-          .setContentText(alarm.route().shortName() + " - " + alarm.stop().name())
+          .setContentTitle(monitoredCall.presentableDistance() + " (" + scheduledTime + ")")
+          .setContentText(alarm.route().shortName() + " at " + alarm.stop().name())
           .setAutoCancel(false)
           .setOngoing(!finishing)
           .setDefaults(defaults)
@@ -227,8 +231,8 @@ public class NearAlarmService extends Service {
                   NearbyBusActivity.IntentFactory.alarmViewer(NearAlarmService.this),
                   PendingIntent.FLAG_UPDATE_CURRENT))
           .addAction(
-              R.drawable.abc_ic_clear_mtrl_alpha,
-              "Cancel",
+              !finishing ? R.drawable.abc_ic_clear_mtrl_alpha : 0,
+              !finishing ? "Cancel" : "OK",
               NotifyCancelAlarmReceiver.createPendingIntent(NearAlarmService.this, alarm.id()))
           .build();
     }

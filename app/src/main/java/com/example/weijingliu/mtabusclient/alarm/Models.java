@@ -23,8 +23,9 @@ public class Models {
     public static Alarm ofNear(
         Route route,
         Stop stop,
-        int nearCount) {
-      return new AutoValue_Models_Alarm(route, stop, Type.NEAR, 0, nearCount);
+        int nearCount,
+        long arrivialTime) {
+      return new AutoValue_Models_Alarm(route, stop, Type.NEAR, arrivialTime, nearCount);
     }
 
     public abstract Route route();

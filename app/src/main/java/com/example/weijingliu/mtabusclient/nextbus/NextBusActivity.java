@@ -180,7 +180,8 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
     Alarm alarm = Alarm.ofNear(
         mRouteStopDirectionSchedules.route(),
         mRouteStopDirectionSchedules.stop(),
-        stopAway);
+        stopAway,
+        schedule.arrivalTime());
     AlarmStore.instance.add(alarm);
 
     NearAlarmService.refreshService(this);

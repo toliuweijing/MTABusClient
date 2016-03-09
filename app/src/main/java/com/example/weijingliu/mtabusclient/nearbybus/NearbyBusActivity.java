@@ -2,9 +2,9 @@ package com.example.weijingliu.mtabusclient.nearbybus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,8 +12,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.weijingliu.mtabusclient.alarm.AlarmViewerFragment;
 import com.example.weijingliu.mtabusclient.R;
+import com.example.weijingliu.mtabusclient.VersionUpdateDialogFragment;
+import com.example.weijingliu.mtabusclient.alarm.AlarmViewerFragment;
 import com.obanyc.api.ObaService;
 import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
 
@@ -32,14 +33,6 @@ public class NearbyBusActivity extends AppCompatActivity {
   private Toolbar mToolbar;
   private NearbyBusFragment mNearbyBusFragment;
   private AlarmViewerFragment mAlarmViewerFragment;
-
-  public static class IntentFactory {
-    public static Intent alarmViewer(Context context) {
-      Intent i = new Intent(context, NearbyBusActivity.class);
-      i.putExtra(DRAWER_ITEM_ID, R.id.alarm);
-      return i;
-    }
-  }
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +67,12 @@ public class NearbyBusActivity extends AppCompatActivity {
     }
     MenuItem menuItem = mNavigationView.getMenu().findItem(menuItemId);
     setCurrentMenuItem(menuItem);
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    VersionUpdateDialogFragment.showVersionUpdateIfNeeded(this, getFragmentManager());
   }
 
   @Override
@@ -185,5 +184,13 @@ public class NearbyBusActivity extends AppCompatActivity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  public static class IntentFactory {
+    public static Intent alarmViewer(Context context) {
+      Intent i = new Intent(context, NearbyBusActivity.class);
+      i.putExtra(DRAWER_ITEM_ID, R.id.alarm);
+      return i;
+    }
   }
 }

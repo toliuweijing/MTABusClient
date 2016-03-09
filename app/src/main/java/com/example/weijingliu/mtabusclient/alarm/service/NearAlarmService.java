@@ -190,7 +190,6 @@ public class NearAlarmService extends Service {
   }
 
   class NotificationHelper {
-    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(NearAlarmService.this);
     Bitmap mBusBitmap = BitmapFactory.decodeResource(
         getResources(),
         R.drawable.ic_launcher);
@@ -209,7 +208,8 @@ public class NearAlarmService extends Service {
         priority = NotificationCompat.PRIORITY_HIGH;
       }
 
-      return mBuilder
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(NearAlarmService.this);
+      return builder
           .setSmallIcon(R.drawable.ic_directions_bus_black_48dp)
           .setLargeIcon(mBusBitmap)
           .setContentTitle(monitoredCall.presentableDistance())
@@ -234,7 +234,8 @@ public class NearAlarmService extends Service {
     }
 
     Notification initial() {
-      return mBuilder
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(NearAlarmService.this);
+      return builder
           .setSmallIcon(R.drawable.ic_directions_bus_black_48dp)
           .setLargeIcon(mBusBitmap)
           .setContentTitle("Start Monitering")
@@ -246,6 +247,12 @@ public class NearAlarmService extends Service {
                   0,
                   NearbyBusActivity.IntentFactory.alarmViewer(NearAlarmService.this),
                   PendingIntent.FLAG_UPDATE_CURRENT))
+//          .addAction(
+//              R.drawable.abc_ic_clear_mtrl_alpha,
+//              "Cancel",
+//              NotifyCancelAlarmReceiver.createPendingIntent(
+//                  NearAlarmService.this,
+//                  NotifyCancelAlarmReceiver.VALUE_CANCEL_ALL))
           .build();
     }
   }

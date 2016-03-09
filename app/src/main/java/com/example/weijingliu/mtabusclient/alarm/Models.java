@@ -1,7 +1,11 @@
 package com.example.weijingliu.mtabusclient.alarm;
 
+import android.util.Log;
+
 import com.google.auto.value.AutoValue;
-import com.obanyc.api.local.Primitives.*;
+import com.google.common.base.Objects;
+import com.obanyc.api.local.Primitives.Route;
+import com.obanyc.api.local.Primitives.Stop;
 
 /**
  * Created by toliuweijing on 6/15/15.
@@ -9,22 +13,6 @@ import com.obanyc.api.local.Primitives.*;
 public class Models {
   @AutoValue
   public static abstract class Alarm {
-    public enum Type {
-      TIME, NEAR
-    }
-
-    public abstract Route route();
-    public abstract Stop stop();
-    public abstract Type type();
-    public abstract long time();
-    public abstract int nearCount();
-
-    public int id() {
-      int common = (route().id() + stop().id()).hashCode();
-      int other = type() == Type.TIME ? (int) time() : nearCount();
-      return common + other;
-    }
-
     public static Alarm ofTime(
         Route route,
         Stop stop,
@@ -37,6 +25,35 @@ public class Models {
         Stop stop,
         int nearCount) {
       return new AutoValue_Models_Alarm(route, stop, Type.NEAR, 0, nearCount);
+    }
+
+    public abstract Route route();
+
+    public abstract Stop stop();
+
+    public abstract Type type();
+
+    public abstract long time();
+
+    public abstract int nearCount();
+
+    public int id() {
+      Log.i("jing", "hashCode-" + String.valueOf(hashCode()));
+      return hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hashCode(
+          route().id(),
+          stop().id(),
+          type(),
+          time(),
+          nearCount());
+    }
+
+    public enum Type {
+      TIME, NEAR
     }
   }
 }

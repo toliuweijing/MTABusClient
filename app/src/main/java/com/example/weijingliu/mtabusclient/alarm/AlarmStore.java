@@ -5,6 +5,9 @@ import com.example.weijingliu.mtabusclient.alarm.Models.Alarm;
 import java.util.ArrayList;
 import java.util.List;
 
+import autovalue.shaded.com.google.common.common.base.Predicate;
+import autovalue.shaded.com.google.common.common.collect.Iterables;
+
 /**
  * Created by toliuweijing on 6/15/15.
  */
@@ -15,6 +18,15 @@ public class AlarmStore {
 
   public void remove(Alarm alarm) {
     mAlarms.remove(alarm);
+  }
+
+  public void remove(final int alarmId) {
+    Iterables.removeIf(mAlarms, new Predicate<Alarm>() {
+      @Override
+      public boolean apply(Alarm alarm) {
+        return alarm.id() == alarmId;
+      }
+    });
   }
 
   public void add(Alarm alarm) {

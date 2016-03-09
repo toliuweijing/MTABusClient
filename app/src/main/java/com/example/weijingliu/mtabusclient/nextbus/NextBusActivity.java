@@ -23,7 +23,7 @@ import com.example.weijingliu.mtabusclient.Utils;
 import com.example.weijingliu.mtabusclient.alarm.AlarmStore;
 import com.example.weijingliu.mtabusclient.alarm.Models.Alarm;
 import com.example.weijingliu.mtabusclient.alarm.service.NearAlarmService;
-import com.example.weijingliu.mtabusclient.alarm.service.NotifyReceiver;
+import com.example.weijingliu.mtabusclient.alarm.service.NotifyScheduleTimeReceiver;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -226,13 +226,13 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
   private void setupAlarmManager(
       RouteStopDirectionSchedules routeStopDirectionSchedules,
       long time) {
-    NotifyReceiver.Config config = new NotifyReceiver.Config(
+    NotifyScheduleTimeReceiver.Config config = new NotifyScheduleTimeReceiver.Config(
         routeStopDirectionSchedules.route().id(),
         routeStopDirectionSchedules.route().shortName(),
         routeStopDirectionSchedules.stop().id(),
         routeStopDirectionSchedules.stop().name());
-    Intent intent = new Intent(this, NotifyReceiver.class);
-    intent.putExtra(NotifyReceiver.EXTRA_CONFIG, config);
+    Intent intent = new Intent(this, NotifyScheduleTimeReceiver.class);
+    intent.putExtra(NotifyScheduleTimeReceiver.EXTRA_CONFIG, config);
     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);

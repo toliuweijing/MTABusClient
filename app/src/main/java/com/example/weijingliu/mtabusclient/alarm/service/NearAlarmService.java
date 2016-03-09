@@ -226,6 +226,10 @@ public class NearAlarmService extends Service {
                   0,
                   NearbyBusActivity.IntentFactory.alarmViewer(NearAlarmService.this),
                   PendingIntent.FLAG_UPDATE_CURRENT))
+          .addAction(
+              R.drawable.abc_ic_clear_mtrl_alpha,
+              "Cancel",
+              NotifyCancelAlarmReceiver.createPendingIntent(NearAlarmService.this, alarm.id()))
           .build();
     }
 

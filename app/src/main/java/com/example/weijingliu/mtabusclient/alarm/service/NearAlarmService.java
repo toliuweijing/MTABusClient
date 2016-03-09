@@ -219,7 +219,7 @@ public class NearAlarmService extends Service {
           .setDefaults(defaults)
           .setWhen(System.currentTimeMillis())
           .setPriority(priority)
-          .setProgress(monitoredCall.stopFromCall(), FINISHING_COUNT, false)
+          .setProgress(monitoredCall.stopFromCall(), APPROACHING_COUNT, false)
           .setContentIntent(
               PendingIntent.getActivity(
                   NearAlarmService.this,

@@ -6,6 +6,8 @@ android {
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
     }
     defaultConfig {
         applicationId "com.polythinking.busgogogo"
@@ -46,3 +48,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:7.5.0'
     compile files('libs/StopsForRouteRoot-sources.jar')
 }
+
+

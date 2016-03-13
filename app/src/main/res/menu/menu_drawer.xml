@@ -11,5 +11,9 @@
             android:id="@+id/alarm"
             android:icon="@drawable/ic_alarm_black_48dp"
             android:title="Alarm"/>
+        <item
+            android:id="@+id/contact_me"
+            android:icon="@drawable/facebook_cycle"
+            android:title="Contact Me"/>
     </group>
 </menu>

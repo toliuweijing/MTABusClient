@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,30 +12,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.weijingliu.mtabusclient.LocationUtil;
 import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.common.HorizontalDividerItemDecoration;
 import com.example.weijingliu.mtabusclient.nextbus.Config;
 import com.example.weijingliu.mtabusclient.nextbus.NextBusActivity;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.obanyc.api.LocalService;
 import com.obanyc.api.local.Primitives;
 import com.obanyc.api.local.Queries;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
-import static com.example.weijingliu.mtabusclient.LocationUtils.pollLocation;
-
 public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.Listener {
   private RecyclerView mRecyclerView;
   private NearbyBusAdapter mNearbyBusAdapter;
   private LinearLayoutManager mLinearLayoutManager;
+  private FloatingActionButton mFab;
+  private LocationUtil mLocationUtil;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    mLocationUtil = new LocationUtil(getActivity());
     testLocalService();
   }
 
@@ -57,6 +63,37 @@ public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.List
     mRecyclerView.setAdapter(mNearbyBusAdapter);
     mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration());
     mNearbyBusAdapter.setListener(this);
+
+    mFab = (FloatingActionButton) view.findViewById(R.id.fab);
+    mFab.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        onFloatingActionButtonClicked();
+      }
+    });
+  }
+
+  private void onFloatingActionButtonClicked() {
+    showEmptyList();
+
+    maybeAlertLocationSettings();
+    Futures.addCallback(
+        mLocationUtil.pollAccurateLocation(),
+        new FutureCallback<Location>() {
+          @Override
+          public void onSuccess(Location result) {
+            fetchWithLocation(result);
+          }
+
+          @Override
+          public void onFailure(Throwable t) {
+          }
+        }
+    );
+  }
+
+  private void showEmptyList() {
+    mNearbyBusAdapter.setRouteDirections(new ArrayList<Queries.RouteDirections>());
   }
 
   @Override
@@ -69,7 +106,21 @@ public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.List
   }
 
   private void testLocalService() {
-    Location location = pollLocation(getActivity());
+    maybeAlertLocationSettings();
+    Location location = mLocationUtil.pollLocation();
+    fetchWithLocation(location);
+  }
+
+  private void maybeAlertLocationSettings() {
+    if (!mLocationUtil.isLocationSettingsEnabled()) {
+      new LocationAlertDialogFragment().show(getFragmentManager(), "");
+    }
+  }
+
+  private void fetchWithLocation(Location location) {
+    if (location == null) {
+      return;
+    }
     LocalService.instance.nearbyRouteDirections(location).toList()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<List<Queries.RouteDirections>>() {
@@ -89,5 +140,4 @@ public class NearbyBusFragment extends Fragment implements NearbyBusAdapter.List
           }
         });
   }
-
 }

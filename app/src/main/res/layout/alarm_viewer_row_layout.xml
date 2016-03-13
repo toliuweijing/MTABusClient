@@ -43,9 +43,10 @@
 
     </LinearLayout>
 
-    <Switch
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/on_off_switch"
         android:layout_gravity="right|center_vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        />
 </FrameLayout>

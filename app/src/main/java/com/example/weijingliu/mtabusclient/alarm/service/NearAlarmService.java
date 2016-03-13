@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,8 @@ import com.example.weijingliu.mtabusclient.nearbybus.NearbyBusActivity;
 import com.obanyc.api.LocalService;
 import com.obanyc.api.local.Primitives.MonitoredCall;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import rx.Subscriber;
@@ -27,10 +30,17 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class NearAlarmService extends Service {
 
+  public static final int FINISHING_COUNT = 0;
+  public static final int APPROACHING_COUNT = 2;
   private Handler mHandler;
   private NotificationHelper mNotificationHelper;
   private NotificationManager mNotificationManager;
   private boolean mForegrounded = false;
+
+  public static void refreshService(Context context) {
+    Intent intent = new Intent(context, NearAlarmService.class);
+    context.startService(intent);
+  }
 
   @Override
   public void onCreate() {
@@ -38,57 +48,6 @@ public class NearAlarmService extends Service {
     mNotificationHelper = new NotificationHelper();
     mHandler = new Handler();
     mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-  }
-
-  class NotificationHelper {
-    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(NearAlarmService.this);
-    Bitmap mBusBitmap = BitmapFactory.decodeResource(
-        getResources(),
-        R.drawable.ic_directions_bus_black_48dp);
-
-    Notification status(Alarm alarm, MonitoredCall monitoredCall, boolean finishing) {
-      int defaults = Notification.DEFAULT_LIGHTS;
-      int priority = NotificationCompat.PRIORITY_DEFAULT;
-      if (finishing) {
-        defaults = Notification.DEFAULT_ALL;
-        priority = NotificationCompat.PRIORITY_HIGH;
-      }
-
-      return mBuilder
-          .setSmallIcon(R.drawable.ic_directions_bus_black_48dp)
-          .setLargeIcon(mBusBitmap)
-          .setContentTitle(monitoredCall.presentableDistance())
-          .setContentText(alarm.route().shortName() + " - " + alarm.stop().name())
-          .setAutoCancel(false)
-          .setOngoing(finishing)
-          .setDefaults(defaults)
-          .setWhen(System.currentTimeMillis())
-          .setPriority(priority)
-          .setProgress(monitoredCall.stopFromCall(), 2, false)
-          .setContentIntent(
-              PendingIntent.getActivity(
-                  NearAlarmService.this,
-                  0,
-                  NearbyBusActivity.IntentFactory.alarmViewer(NearAlarmService.this),
-                  PendingIntent.FLAG_UPDATE_CURRENT))
-          .build();
-    }
-
-    Notification initial() {
-      return mBuilder
-          .setSmallIcon(R.drawable.ic_directions_bus_black_48dp)
-          .setLargeIcon(mBusBitmap)
-          .setContentTitle("Start Monitering")
-          .setAutoCancel(false)
-          .setOngoing(true)
-          .setContentIntent(
-              PendingIntent.getActivity(
-                  NearAlarmService.this,
-                  0,
-                  NearbyBusActivity.IntentFactory.alarmViewer(NearAlarmService.this),
-                  PendingIntent.FLAG_UPDATE_CURRENT))
-          .build();
-    }
   }
 
   @Override
@@ -156,14 +115,20 @@ public class NearAlarmService extends Service {
             @Override
             public void onNext(MonitoredCall monitoredCall) {
               boolean finishing = false;
-              if (monitoredCall.stopFromCall() <= alarm.nearCount()) {
+              boolean approaching = false;
+
+              if (monitoredCall.stopFromCall() <= FINISHING_COUNT) {
                 AlarmStore.instance.remove(alarm);
                 finishing = true;
+              }
+              if (monitoredCall.stopFromCall() <= APPROACHING_COUNT) {
+                approaching = true;
               }
               Notification notification = mNotificationHelper.status(
                   alarm,
                   monitoredCall,
-                  finishing);
+                  finishing,
+                  approaching);
               mNotificationManager.notify(alarm.id(), notification);
 
               stopIfNeeded();
@@ -177,6 +142,15 @@ public class NearAlarmService extends Service {
   }
 
   public static class Config implements Parcelable {
+    public static final Parcelable.Creator<Config> CREATOR = new Parcelable.Creator<Config>() {
+      public Config createFromParcel(Parcel source) {
+        return new Config(source);
+      }
+
+      public Config[] newArray(int size) {
+        return new Config[size];
+      }
+    };
     private String routeId;
     private String routeName;
     private String stopId;
@@ -194,6 +168,14 @@ public class NearAlarmService extends Service {
       this.nearCount = nearCount;
     }
 
+    protected Config(Parcel in) {
+      this.routeId = in.readString();
+      this.routeName = in.readString();
+      this.stopId = in.readString();
+      this.stopName = in.readString();
+      this.nearCount = in.readInt();
+    }
+
     @Override
     public int describeContents() {
       return 0;
@@ -207,23 +189,75 @@ public class NearAlarmService extends Service {
       dest.writeString(this.stopName);
       dest.writeInt(this.nearCount);
     }
+  }
 
-    protected Config(Parcel in) {
-      this.routeId = in.readString();
-      this.routeName = in.readString();
-      this.stopId = in.readString();
-      this.stopName = in.readString();
-      this.nearCount = in.readInt();
+  class NotificationHelper {
+    Bitmap mBusBitmap = BitmapFactory.decodeResource(
+        getResources(),
+        R.drawable.ic_launcher);
+
+    Notification status(
+        Alarm alarm,
+        MonitoredCall monitoredCall,
+        boolean finishing,
+        boolean approaching) {
+      int defaults = Notification.DEFAULT_LIGHTS;
+      int priority = NotificationCompat.PRIORITY_DEFAULT;
+
+      // Ring the bell if bus monitor is approaching or finishing.
+      if (finishing || approaching) {
+        defaults = Notification.DEFAULT_ALL;
+        priority = NotificationCompat.PRIORITY_HIGH;
+      }
+
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(NearAlarmService.this);
+      String scheduledTime = new SimpleDateFormat("h:mm a").format(new Date(alarm.time()));
+
+      return builder
+          .setSmallIcon(R.drawable.ic_directions_bus_black_48dp)
+          .setLargeIcon(mBusBitmap)
+          .setContentTitle(monitoredCall.presentableDistance() + " (" + scheduledTime + ")")
+          .setContentText(alarm.route().shortName() + " at " + alarm.stop().name())
+          .setAutoCancel(false)
+          .setOngoing(!finishing)
+          .setDefaults(defaults)
+          .setWhen(System.currentTimeMillis())
+          .setPriority(priority)
+          .setProgress(monitoredCall.stopFromCall(), APPROACHING_COUNT, false)
+          .setContentIntent(
+              PendingIntent.getActivity(
+                  NearAlarmService.this,
+                  0,
+                  NearbyBusActivity.IntentFactory.alarmViewer(NearAlarmService.this),
+                  PendingIntent.FLAG_UPDATE_CURRENT))
+          .addAction(
+              !finishing ? R.drawable.abc_ic_clear_mtrl_alpha : 0,
+              !finishing ? "Cancel" : "OK",
+              NotifyCancelAlarmReceiver.createPendingIntent(NearAlarmService.this, alarm.id()))
+          .build();
     }
 
-    public static final Parcelable.Creator<Config> CREATOR = new Parcelable.Creator<Config>() {
-      public Config createFromParcel(Parcel source) {
-        return new Config(source);
-      }
-
-      public Config[] newArray(int size) {
-        return new Config[size];
-      }
-    };
+    Notification initial() {
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(NearAlarmService.this);
+      return builder
+          .setSmallIcon(R.drawable.ic_directions_bus_black_48dp)
+          .setLargeIcon(mBusBitmap)
+          .setContentTitle("Start Monitering")
+          .setAutoCancel(false)
+          .setOngoing(true)
+          .setContentIntent(
+              PendingIntent.getActivity(
+                  NearAlarmService.this,
+                  0,
+                  NearbyBusActivity.IntentFactory.alarmViewer(NearAlarmService.this),
+                  PendingIntent.FLAG_UPDATE_CURRENT))
+//          .addAction(
+//              R.drawable.abc_ic_clear_mtrl_alpha,
+//              "Cancel",
+//              NotifyCancelAlarmReceiver.createPendingIntent(
+//                  NearAlarmService.this,
+//                  NotifyCancelAlarmReceiver.VALUE_CANCEL_ALL))
+          .build();
+    }
   }
 }

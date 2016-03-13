@@ -15,13 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.example.weijingliu.mtabusclient.LocationUtil;
 import com.example.weijingliu.mtabusclient.R;
 import com.example.weijingliu.mtabusclient.Utils;
 import com.example.weijingliu.mtabusclient.alarm.AlarmStore;
 import com.example.weijingliu.mtabusclient.alarm.Models.Alarm;
 import com.example.weijingliu.mtabusclient.alarm.service.NearAlarmService;
-import com.example.weijingliu.mtabusclient.alarm.service.NotifyReceiver;
+import com.example.weijingliu.mtabusclient.alarm.service.NotifyScheduleTimeReceiver;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,8 +39,6 @@ import com.obanyc.api.local.Queries.RouteStopDirectionSchedules;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
-import static com.example.weijingliu.mtabusclient.LocationUtils.pollLocation;
-
 public class NextBusActivity extends AppCompatActivity implements OnMapReadyCallback {
   //TODO
   private NextBusAdapter mNextBusAdapter;
@@ -50,12 +50,14 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
   private Config mConfig;
   private MapFragment mMapFragment;
   private RouteStopDirectionSchedules mRouteStopDirectionSchedules;
+  private LocationUtil mLocationUtil;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_next_bus);
 
+    mLocationUtil = new LocationUtil(this);
     init();
     testApi();
   }
@@ -64,7 +66,7 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
     Log.d("jing", mConfig.toString());
 
     LocalService.instance.routeStopDirectionSchedule(
-        pollLocation(this),
+        mLocationUtil.pollLocation(),
         mConfig.getRouteId(),
         mConfig.getDirectionId())
         .observeOn(AndroidSchedulers.mainThread())
@@ -151,14 +153,21 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            Log.d("jing-stopIndex", String.valueOf(mRouteStopDirectionSchedules.stopIndex()));
-            if (mRouteStopDirectionSchedules.stopIndex() < 4) {
-              onTimeAlarmSelected();
-            } else {
-              onNearAlarmSelected();
-            }
+            onFloatingActionButtonClicked();
           }
         });
+  }
+
+  private void onFloatingActionButtonClicked() {
+    if (mRouteStopDirectionSchedules == null) {
+      Toast
+          .makeText(this, "Something went wrong. Try again later", Toast.LENGTH_LONG)
+          .show();
+      return;
+    }
+
+    Log.d("jing-stopIndex", String.valueOf(mRouteStopDirectionSchedules.stopIndex()));
+    onNearAlarmSelected();
   }
 
   private void onNearAlarmSelected() {
@@ -171,11 +180,11 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
     Alarm alarm = Alarm.ofNear(
         mRouteStopDirectionSchedules.route(),
         mRouteStopDirectionSchedules.stop(),
-        stopAway);
+        stopAway,
+        schedule.arrivalTime());
     AlarmStore.instance.add(alarm);
 
-    Intent intent = new Intent(this, NearAlarmService.class);
-    startService(intent);
+    NearAlarmService.refreshService(this);
 
     Snackbar
         .make(
@@ -218,13 +227,13 @@ public class NextBusActivity extends AppCompatActivity implements OnMapReadyCall
   private void setupAlarmManager(
       RouteStopDirectionSchedules routeStopDirectionSchedules,
       long time) {
-    NotifyReceiver.Config config = new NotifyReceiver.Config(
+    NotifyScheduleTimeReceiver.Config config = new NotifyScheduleTimeReceiver.Config(
         routeStopDirectionSchedules.route().id(),
         routeStopDirectionSchedules.route().shortName(),
         routeStopDirectionSchedules.stop().id(),
         routeStopDirectionSchedules.stop().name());
-    Intent intent = new Intent(this, NotifyReceiver.class);
-    intent.putExtra(NotifyReceiver.EXTRA_CONFIG, config);
+    Intent intent = new Intent(this, NotifyScheduleTimeReceiver.class);
+    intent.putExtra(NotifyScheduleTimeReceiver.EXTRA_CONFIG, config);
     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);

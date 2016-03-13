@@ -2,9 +2,10 @@ package com.example.weijingliu.mtabusclient.nearbybus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,8 +13,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.weijingliu.mtabusclient.alarm.AlarmViewerFragment;
 import com.example.weijingliu.mtabusclient.R;
+import com.example.weijingliu.mtabusclient.VersionUpdateDialogFragment;
+import com.example.weijingliu.mtabusclient.alarm.AlarmViewerFragment;
 import com.obanyc.api.ObaService;
 import com.obanyc.api.where.stopsforlocation.StopsForLocationRoot;
 
@@ -32,14 +34,6 @@ public class NearbyBusActivity extends AppCompatActivity {
   private Toolbar mToolbar;
   private NearbyBusFragment mNearbyBusFragment;
   private AlarmViewerFragment mAlarmViewerFragment;
-
-  public static class IntentFactory {
-    public static Intent alarmViewer(Context context) {
-      Intent i = new Intent(context, NearbyBusActivity.class);
-      i.putExtra(DRAWER_ITEM_ID, R.id.alarm);
-      return i;
-    }
-  }
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +71,12 @@ public class NearbyBusActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onStart() {
+    super.onStart();
+    VersionUpdateDialogFragment.showVersionUpdateIfNeeded(this, getFragmentManager());
+  }
+
+  @Override
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putInt(DRAWER_ITEM_ID, findCheckedMenuItem().getItemId());
@@ -97,13 +97,23 @@ public class NearbyBusActivity extends AppCompatActivity {
 
     if (id == R.id.bus) {
       pushNearbyBusFragment();
+      menuItem.setChecked(true);
     }
     if (id == R.id.alarm) {
       pushAlarmViewerFragment();
+      menuItem.setChecked(true);
+    }
+    if (id == R.id.contact_me) {
+      handleContactMe();
     }
 
-    menuItem.setChecked(true);
     mDrawerLayout.closeDrawers();
+  }
+
+  private void handleContactMe() {
+    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://fb.me/msg/busggg"));
+    Intent chooser = Intent.createChooser(i, "Choose your browser");
+    startActivity(chooser);
   }
 
   private void pushNearbyBusFragment() {
@@ -178,11 +188,6 @@ public class NearbyBusActivity extends AppCompatActivity {
     // as you specify a parent activity in AndroidManifest.xml.
     int id = item.getItemId();
 
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
-    }
-
     if (id == android.R.id.home) {
       Log.d(TAG, "Toolbar's home clicked");
       mDrawerLayout.openDrawer(Gravity.START);
@@ -190,5 +195,13 @@ public class NearbyBusActivity extends AppCompatActivity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  public static class IntentFactory {
+    public static Intent alarmViewer(Context context) {
+      Intent i = new Intent(context, NearbyBusActivity.class);
+      i.putExtra(DRAWER_ITEM_ID, R.id.alarm);
+      return i;
+    }
   }
 }
